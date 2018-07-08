@@ -6,6 +6,7 @@
     android:padding="16dp">
 
     <RelativeLayout
+        android:id="@+id/camera"
         android:layout_width="wrap_content"
         android:layout_height="125dp">
 
@@ -62,6 +63,31 @@
             </RelativeLayout>
         </LinearLayout>
 
+        <!--Price-->
+        <LinearLayout
+            android:id="@+id/container_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/CategoryStyle"
+                android:text="Price" />
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:paddingLeft="4dp">
+
+                <EditText
+                    android:id="@+id/edit_item_price"
+                    style="@style/EditorFieldStyle"
+                    android:inputType="number" />
+
+            </RelativeLayout>
+        </LinearLayout>
+
         <!--Item Quantity-->
         <LinearLayout
             android:id="@+id/container_quantity"
@@ -112,7 +138,7 @@
             </RelativeLayout>
         </LinearLayout>
 
-        <!-- Gender category -->
+        <!--Category-->
         <LinearLayout
             android:id="@+id/container_gender"
             android:layout_width="match_parent"
@@ -141,7 +167,7 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Measurement category -->
+        <!-- Item Location -->
         <LinearLayout
             android:id="@+id/container_measurement"
             android:layout_width="match_parent"
@@ -151,7 +177,7 @@
             <!-- Label -->
             <TextView
                 style="@style/CategoryStyle"
-                android:text="Measurement" />
+                android:text="Item Location" />
 
             <!-- Input fields -->
             <RelativeLayout
@@ -164,15 +190,12 @@
                 <EditText
                     android:id="@+id/edit_pet_weight"
                     style="@style/EditorFieldStyle"
-                    android:hint="Weight"
+                    android:hint="Item Location"
                     android:inputType="number" />
 
-                <!-- Units for weight (kg) -->
-                <TextView
-                    android:id="@+id/label_weight_units"
-                    style="@style/EditorUnitsStyle"
-                    android:text="kg" />
             </RelativeLayout>
         </LinearLayout>
+
+
     </LinearLayout>
 </LinearLayout>
