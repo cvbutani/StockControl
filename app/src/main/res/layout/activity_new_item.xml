@@ -9,68 +9,108 @@
         android:layout_width="wrap_content"
         android:layout_height="125dp">
 
-        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/profile_image"
-            android:layout_width="125dp"
-            android:layout_height="125dp"
-            android:src="@drawable/inventory"
-            app:civ_border_color="#FF000000"
-            app:civ_border_width="1dp" />
+        <!--<de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"-->
+        <!--android:id="@+id/profile_image"-->
+        <!--android:layout_width="125dp"-->
+        <!--android:layout_height="125dp"-->
+        <!--android:src="@drawable/inventory"-->
+        <!--app:civ_border_color="#FF000000"-->
+        <!--app:civ_border_width="1dp" />-->
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/inventory" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginBottom="16dp"
-            android:layout_marginStart="72dp"
-            android:src="@drawable/ic_camera"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="72dp" />
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_camera" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/profile_image"
-            android:orientation="horizontal">
 
-            <!-- Label -->
-            <TextView
-                style="@style/CategoryStyle"
-                android:text="Overview" />
-
-            <!-- Input fields -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:orientation="vertical"
-                android:paddingLeft="4dp">
-
-                <!-- Name field -->
-                <EditText
-                    android:id="@+id/edit_pet_name"
-                    style="@style/EditorFieldStyle"
-                    android:hint="Name"
-                    android:inputType="textCapWords" />
-
-                <!-- Breed field -->
-                <EditText
-                    android:id="@+id/edit_pet_breed"
-                    style="@style/EditorFieldStyle"
-                    android:hint="Breed"
-                    android:inputType="textCapWords" />
-            </LinearLayout>
-        </LinearLayout>
     </RelativeLayout>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="vertical">
 
-        <!-- Overview category -->
+        <!--Item Name-->
+        <LinearLayout
+            android:id="@+id/container_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
+            <TextView
+                style="@style/CategoryStyle"
+                android:text="Item Name" />
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:paddingLeft="4dp">
+
+                <EditText
+                    android:id="@+id/edit_item_name"
+                    style="@style/EditorFieldStyle"
+                    android:inputType="text" />
+
+            </RelativeLayout>
+        </LinearLayout>
+
+        <!--Item Quantity-->
+        <LinearLayout
+            android:id="@+id/container_quantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/CategoryStyle"
+                android:text="Quantity Available" />
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:paddingLeft="4dp">
+
+                <EditText
+                    android:id="@+id/edit_item_quantity"
+                    style="@style/EditorFieldStyle"
+                    android:inputType="number" />
+
+            </RelativeLayout>
+        </LinearLayout>
+
+        <!--Date-->
+        <LinearLayout
+            android:id="@+id/container_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/CategoryStyle"
+                android:text="Date Received" />
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:paddingLeft="4dp">
+
+                <TextView
+                    android:id="@+id/edit_item_date"
+                    style="@style/EditorFieldStyle"
+                    android:text="Pick a Date" />
+
+            </RelativeLayout>
+        </LinearLayout>
 
         <!-- Gender category -->
         <LinearLayout
@@ -82,7 +122,7 @@
             <!-- Label -->
             <TextView
                 style="@style/CategoryStyle"
-                android:text="Gender" />
+                android:text="Category" />
 
             <!-- Input field -->
             <LinearLayout
