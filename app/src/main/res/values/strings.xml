@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Stock Control</string>
+    <string name="empty_view_title_text">No Items available in Database.</string>
+    <string name="empty_view_subtitle_text">Press + to add.</string>
+    <string name="action_insert_dummy_data">Insert Dummy Data</string>
+    <string name="action_delete_all_entries">Delete All Items</string>
+    <string name="action_save">Save</string>
+    <string name="action_delete">Delete</string>
+</resources>
