@@ -2,6 +2,137 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp">
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="125dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/profile_image"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            android:src="@drawable/inventory"
+            app:civ_border_color="#FF000000"
+            app:civ_border_width="1dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="16dp"
+            android:layout_marginStart="72dp"
+            android:src="@drawable/ic_camera"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="72dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/profile_image"
+            android:orientation="horizontal">
+
+            <!-- Label -->
+            <TextView
+                style="@style/CategoryStyle"
+                android:text="Overview" />
+
+            <!-- Input fields -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:orientation="vertical"
+                android:paddingLeft="4dp">
+
+                <!-- Name field -->
+                <EditText
+                    android:id="@+id/edit_pet_name"
+                    style="@style/EditorFieldStyle"
+                    android:hint="Name"
+                    android:inputType="textCapWords" />
+
+                <!-- Breed field -->
+                <EditText
+                    android:id="@+id/edit_pet_breed"
+                    style="@style/EditorFieldStyle"
+                    android:hint="Breed"
+                    android:inputType="textCapWords" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Overview category -->
+
+
+        <!-- Gender category -->
+        <LinearLayout
+            android:id="@+id/container_gender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Label -->
+            <TextView
+                style="@style/CategoryStyle"
+                android:text="Gender" />
+
+            <!-- Input field -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:orientation="vertical">
+
+                <!-- Gender drop-down spinner -->
+                <Spinner
+                    android:id="@+id/spinner_gender"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:paddingRight="16dp"
+                    android:spinnerMode="dropdown" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Measurement category -->
+        <LinearLayout
+            android:id="@+id/container_measurement"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Label -->
+            <TextView
+                style="@style/CategoryStyle"
+                android:text="Measurement" />
+
+            <!-- Input fields -->
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:paddingLeft="4dp">
+
+                <!-- Weight field -->
+                <EditText
+                    android:id="@+id/edit_pet_weight"
+                    style="@style/EditorFieldStyle"
+                    android:hint="Weight"
+                    android:inputType="number" />
+
+                <!-- Units for weight (kg) -->
+                <TextView
+                    android:id="@+id/label_weight_units"
+                    style="@style/EditorUnitsStyle"
+                    android:text="kg" />
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>
