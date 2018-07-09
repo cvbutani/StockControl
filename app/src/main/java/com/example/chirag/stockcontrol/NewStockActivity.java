@@ -31,10 +31,9 @@ import java.util.Calendar;
 
 public class NewStockActivity extends AppCompatActivity {
 
-    private RelativeLayout rlCamera;
-
     private DatePickerDialog.OnDateSetListener mDateSetListener;
 
+    private RelativeLayout rlCamera;
     private TextView tvDatePicker;
     private EditText mNameEditText;
     private EditText mPriceEditText;
