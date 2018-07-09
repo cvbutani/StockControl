@@ -8,6 +8,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.chirag.stockcontrol.data.StockDbhelper;
+
 public class StockActivity extends AppCompatActivity {
 
     @Override
@@ -23,6 +25,10 @@ public class StockActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void insertData() {
+
     }
 
     @Override

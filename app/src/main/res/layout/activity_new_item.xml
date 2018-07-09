@@ -190,8 +190,7 @@
                 <EditText
                     android:id="@+id/edit_item_location"
                     style="@style/EditorFieldStyle"
-                    android:hint="Item Location"
-                    android:inputType="number" />
+                    android:inputType="text" />
 
             </RelativeLayout>
         </LinearLayout>
@@ -219,8 +218,7 @@
                 <EditText
                     android:id="@+id/edit_item_supplier"
                     style="@style/EditorFieldStyle"
-                    android:hint="Item Location"
-                    android:inputType="number" />
+                    android:inputType="text" />
 
             </RelativeLayout>
         </LinearLayout>

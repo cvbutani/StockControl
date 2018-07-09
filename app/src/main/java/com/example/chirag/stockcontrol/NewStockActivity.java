@@ -1,9 +1,11 @@
 package com.example.chirag.stockcontrol;
 
 import android.app.DatePickerDialog;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 
@@ -21,6 +23,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.chirag.stockcontrol.data.StockContract.StockEntry;
 
@@ -43,6 +46,7 @@ public class NewStockActivity extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private int mCategory = 0;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +63,6 @@ public class NewStockActivity extends AppCompatActivity {
                 }
             }
         });
-
 
         tvDatePicker.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,7 +86,7 @@ public class NewStockActivity extends AppCompatActivity {
         mDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                String date = dayOfMonth + "/" + month + "/" + year ;
+                String date = dayOfMonth + "/" + month + "/" + year;
                 tvDatePicker.setText(date);
             }
         };
@@ -102,7 +105,7 @@ public class NewStockActivity extends AppCompatActivity {
         mCategorySpinner = findViewById(R.id.spinner_category);
     }
 
-    private void setupSpinner(){
+    private void setupSpinner() {
         ArrayAdapter categorySpinnerAdapter = ArrayAdapter.createFromResource(this,
                 R.array.array_category_options, android.R.layout.simple_spinner_item);
 
@@ -114,25 +117,25 @@ public class NewStockActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selection = (String) parent.getItemAtPosition(position);
-                if (!TextUtils.isEmpty(selection)){
+                if (!TextUtils.isEmpty(selection)) {
                     if (selection.equals(getString(R.string.category_adult_clothing))) {
                         mCategory = StockEntry.CATEGORY_ADULT_FASHION;
                     } else if (selection.equals(getString(R.string.category_baby_clothing))) {
                         mCategory = StockEntry.CATEGORY_BABY_CLOTHING;
-                    }else if (selection.equals(getString(R.string.category_beauty))) {
+                    } else if (selection.equals(getString(R.string.category_beauty))) {
                         mCategory = StockEntry.CATEGORY_BEAUTY_COSMETICS;
-                    }else if (selection.equals(getString(R.string.category_books))) {
+                    } else if (selection.equals(getString(R.string.category_books))) {
                         mCategory = StockEntry.CATEGORY_BOOKS;
-                    }else if (selection.equals(getString(R.string.category_electronics))) {
+                    } else if (selection.equals(getString(R.string.category_electronics))) {
                         mCategory = StockEntry.CATEGORY_ELECTRONICS;
-                    }else if (selection.equals(getString(R.string.category_food))) {
+                    } else if (selection.equals(getString(R.string.category_food))) {
                         mCategory = StockEntry.CATEGORY_FOOD;
-                    }else if (selection.equals(getString(R.string.category_health))) {
+                    } else if (selection.equals(getString(R.string.category_health))) {
                         mCategory = StockEntry.CATEGORY_HEALTH;
-                    }else if (selection.equals(getString(R.string.category_housewares))) {
+                    } else if (selection.equals(getString(R.string.category_housewares))) {
                         mCategory = StockEntry.CATEGORY_HOUSEWARE;
-                    }else if (selection.equals(getString(R.string.category_toys_game))) {
-                        mCategory = StockEntry.CATEGORY_GAMES   ;
+                    } else if (selection.equals(getString(R.string.category_toys_game))) {
+                        mCategory = StockEntry.CATEGORY_GAMES;
                     }
                 }
             }
@@ -142,6 +145,43 @@ public class NewStockActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void saveStockItem() {
+        double price = 0;
+        int quantity = 0;
+        String name = mNameEditText.getText().toString().trim();
+        String priceString = mPriceEditText.getText().toString().trim();
+        String quantityString = mQuantityEditText.getText().toString().trim();
+        String date = tvDatePicker.toString();
+        String location = mLocationEditText.toString().trim();
+        String supplier = mSupplierEditText.toString().trim();
+
+        if (!TextUtils.isEmpty(priceString)) {
+            price = Integer.parseInt(priceString);
+        }
+
+        if (!TextUtils.isEmpty(quantityString)) {
+            quantity = Integer.parseInt(quantityString);
+        }
+
+        ContentValues values = new ContentValues();
+
+        values.put(StockEntry.COLUMN_ITEM_NAME, name);
+        values.put(StockEntry.COLUMN_ITEM_PRICE, price);
+        values.put(StockEntry.COLUMN_ITEM_QUANTITY, quantity);
+        values.put(StockEntry.COLUMN_ITEM_CATEGORY, mCategory);
+        values.put(StockEntry.COLUMN_ITEM_DATE, date);
+        values.put(StockEntry.COLUMN_ITEM_LOCATION, location);
+        values.put(StockEntry.COLUMN_ITEM_SUPPLIER, supplier);
+
+        Uri newUri = getContentResolver().insert(StockEntry.CONTENT_URI, values);
+
+        if (newUri != null) {
+            Toast.makeText(getApplicationContext(), "Item added", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getApplicationContext(), "Can't add this Item", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -154,6 +194,8 @@ public class NewStockActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_save:
+                    saveStockItem();
+                    finish();
                 return true;
             case R.id.action_delete:
                 return true;
@@ -163,6 +205,5 @@ public class NewStockActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 
 }
