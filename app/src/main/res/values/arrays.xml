@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="array_category_options">
+        <item>@string/category_unknown</item>
+        <item>@string/category_adult_clothing</item>
+        <item>@string/category_baby_clothing</item>
+        <item>@string/category_beauty</item>
+        <item>@string/category_books</item>
+        <item>@string/category_electronics</item>
+        <item>@string/category_food</item>
+        <item>@string/category_health</item>
+        <item>@string/category_housewares</item>
+        <item>@string/category_toys_game</item>
+    </string-array>
+
+</resources>

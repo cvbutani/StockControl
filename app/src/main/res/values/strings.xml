@@ -6,4 +6,16 @@
     <string name="action_delete_all_entries">Delete All Items</string>
     <string name="action_save">Save</string>
     <string name="action_delete">Delete</string>
+
+    <string name="category_unknown">UNKNOWN</string>
+    <string name="category_adult_clothing">ADULT CLOTHING</string>
+    <string name="category_baby_clothing">BABY&#39;S CLOTHING</string>
+    <string name="category_beauty">BEAUTY &amp; COSMETICS</string>
+    <string name="category_books">BOOKS</string>
+    <string name="category_electronics">ELECTRONICS</string>
+    <string name="category_food">FOOD &amp; BEVERAGES</string>
+    <string name="category_health">HEALTH</string>
+    <string name="category_housewares">HOUSEWARES / KITCHENWARES</string>
+    <string name="category_toys_game">TOYS &amp; GAMES</string>
+
 </resources>

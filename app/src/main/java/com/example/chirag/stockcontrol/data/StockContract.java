@@ -9,9 +9,9 @@ public class StockContract {
     public StockContract() {
     }
 
-    public static final String CONTENT_AUTHORITY = "com.example.chirag.stockvontrol";
+    public static final String CONTENT_AUTHORITY = "com.example.chirag.stockcontrol";
 
-    public static final String  PATH_STOCK = "inventory";
+    public static final String PATH_STOCK = "inventory";
 
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
@@ -22,6 +22,8 @@ public class StockContract {
         public static final String CONTENT_LIST_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_STOCK;
 
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_STOCK;
         public static final String TABLE_NAME = "inventory";
         public static final String _ID = BaseColumns._ID;
         public static final String COLUMN_ITEM_NAME = "name";
@@ -43,7 +45,7 @@ public class StockContract {
         public static final int CATEGORY_ADULT_FASHION = 1;     //  ADULT CLOTHING
         public static final int CATEGORY_GAMES = 9;             //  TOYS & GAMES
 
-        public static boolean isValidCategory (int category) {
+        public static boolean isValidCategory(int category) {
 
             if (category == CATEGORY_UNKNOWN || category == CATEGORY_ELECTRONICS ||
                     category == CATEGORY_BABY_CLOTHING || category == CATEGORY_BEAUTY_COSMETICS ||

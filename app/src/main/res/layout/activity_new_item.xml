@@ -140,7 +140,7 @@
 
         <!--Category-->
         <LinearLayout
-            android:id="@+id/container_gender"
+            android:id="@+id/container_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -159,7 +159,7 @@
 
                 <!-- Gender drop-down spinner -->
                 <Spinner
-                    android:id="@+id/spinner_gender"
+                    android:id="@+id/spinner_category"
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:paddingRight="16dp"
@@ -169,7 +169,7 @@
 
         <!-- Item Location -->
         <LinearLayout
-            android:id="@+id/container_measurement"
+            android:id="@+id/container_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -188,7 +188,7 @@
 
                 <!-- Weight field -->
                 <EditText
-                    android:id="@+id/edit_pet_weight"
+                    android:id="@+id/edit_item_location"
                     style="@style/EditorFieldStyle"
                     android:hint="Item Location"
                     android:inputType="number" />
@@ -196,6 +196,34 @@
             </RelativeLayout>
         </LinearLayout>
 
+        <!-- Supplier -->
+        <LinearLayout
+            android:id="@+id/container_supplier"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Label -->
+            <TextView
+                style="@style/CategoryStyle"
+                android:text="Supplier" />
+
+            <!-- Input fields -->
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:paddingLeft="4dp">
+
+                <!-- Weight field -->
+                <EditText
+                    android:id="@+id/edit_item_supplier"
+                    style="@style/EditorFieldStyle"
+                    android:hint="Item Location"
+                    android:inputType="number" />
+
+            </RelativeLayout>
+        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>

@@ -6,34 +6,49 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
+
 import android.support.annotation.Nullable;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.example.chirag.stockcontrol.data.StockContract.StockEntry;
 
 import java.util.Calendar;
 
 public class NewStockActivity extends AppCompatActivity {
 
     private RelativeLayout rlCamera;
-    private TextView tvDatePicker;
+
     private DatePickerDialog.OnDateSetListener mDateSetListener;
+
+    private TextView tvDatePicker;
+    private EditText mNameEditText;
+    private EditText mPriceEditText;
+    private EditText mQuantityEditText;
+    private Spinner mCategorySpinner;
+    private EditText mLocationEditText;
+    private EditText mSupplierEditText;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
-
+    private int mCategory = 0;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_item);
 
-        rlCamera = findViewById(R.id.camera);
+        findAllViews();
 
         rlCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,7 +60,7 @@ public class NewStockActivity extends AppCompatActivity {
             }
         });
 
-        tvDatePicker = findViewById(R.id.edit_item_date);
+
         tvDatePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,6 +87,61 @@ public class NewStockActivity extends AppCompatActivity {
                 tvDatePicker.setText(date);
             }
         };
+
+        setupSpinner();
+    }
+
+    private void findAllViews() {
+        tvDatePicker = findViewById(R.id.edit_item_date);
+        rlCamera = findViewById(R.id.camera);
+        mNameEditText = findViewById(R.id.edit_item_name);
+        mPriceEditText = findViewById(R.id.edit_item_price);
+        mQuantityEditText = findViewById(R.id.edit_item_quantity);
+        mLocationEditText = findViewById(R.id.edit_item_location);
+        mSupplierEditText = findViewById(R.id.edit_item_supplier);
+        mCategorySpinner = findViewById(R.id.spinner_category);
+    }
+
+    private void setupSpinner(){
+        ArrayAdapter categorySpinnerAdapter = ArrayAdapter.createFromResource(this,
+                R.array.array_category_options, android.R.layout.simple_spinner_item);
+
+        categorySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+
+        mCategorySpinner.setAdapter(categorySpinnerAdapter);
+
+        mCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selection = (String) parent.getItemAtPosition(position);
+                if (!TextUtils.isEmpty(selection)){
+                    if (selection.equals(getString(R.string.category_adult_clothing))) {
+                        mCategory = StockEntry.CATEGORY_ADULT_FASHION;
+                    } else if (selection.equals(getString(R.string.category_baby_clothing))) {
+                        mCategory = StockEntry.CATEGORY_BABY_CLOTHING;
+                    }else if (selection.equals(getString(R.string.category_beauty))) {
+                        mCategory = StockEntry.CATEGORY_BEAUTY_COSMETICS;
+                    }else if (selection.equals(getString(R.string.category_books))) {
+                        mCategory = StockEntry.CATEGORY_BOOKS;
+                    }else if (selection.equals(getString(R.string.category_electronics))) {
+                        mCategory = StockEntry.CATEGORY_ELECTRONICS;
+                    }else if (selection.equals(getString(R.string.category_food))) {
+                        mCategory = StockEntry.CATEGORY_FOOD;
+                    }else if (selection.equals(getString(R.string.category_health))) {
+                        mCategory = StockEntry.CATEGORY_HEALTH;
+                    }else if (selection.equals(getString(R.string.category_housewares))) {
+                        mCategory = StockEntry.CATEGORY_HOUSEWARE;
+                    }else if (selection.equals(getString(R.string.category_toys_game))) {
+                        mCategory = StockEntry.CATEGORY_GAMES   ;
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     @Override
@@ -93,4 +163,6 @@ public class NewStockActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }

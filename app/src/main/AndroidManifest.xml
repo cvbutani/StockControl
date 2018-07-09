@@ -23,5 +23,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".StockActivity" />
         </activity>
+        <provider
+            android:authorities="com.example.chirag.stockcontrol"
+            android:name=".data.StockProvider"
+            android:exported="false"/>
     </application>
 </manifest>
