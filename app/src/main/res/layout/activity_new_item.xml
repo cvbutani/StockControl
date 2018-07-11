@@ -19,6 +19,7 @@
         <!--app:civ_border_width="1dp" />-->
 
         <ImageView
+            android:id="@+id/inventory_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/inventory" />

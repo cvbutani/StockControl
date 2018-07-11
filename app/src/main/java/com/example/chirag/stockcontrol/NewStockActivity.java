@@ -1,5 +1,6 @@
 package com.example.chirag.stockcontrol;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -7,10 +8,12 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 
 import android.support.annotation.Nullable;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -20,14 +23,21 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.chirag.stockcontrol.data.StockContract.StockEntry;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class NewStockActivity extends AppCompatActivity {
 
@@ -41,10 +51,12 @@ public class NewStockActivity extends AppCompatActivity {
     private Spinner mCategorySpinner;
     private EditText mLocationEditText;
     private EditText mSupplierEditText;
+    private ImageView mImageView;
 
-    static final int REQUEST_IMAGE_CAPTURE = 1;
+    static final int REQUEST_IMAGE_CAPTURE = 100;
 
     private int mCategory = 0;
+    private String imageFilePath;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,10 +68,7 @@ public class NewStockActivity extends AppCompatActivity {
         rlCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                }
+                openCameraIntent();
             }
         });
 
@@ -102,6 +111,7 @@ public class NewStockActivity extends AppCompatActivity {
         mLocationEditText = findViewById(R.id.edit_item_location);
         mSupplierEditText = findViewById(R.id.edit_item_supplier);
         mCategorySpinner = findViewById(R.id.spinner_category);
+        mImageView = findViewById(R.id.inventory_image);
     }
 
     private void setupSpinner() {
@@ -183,6 +193,37 @@ public class NewStockActivity extends AppCompatActivity {
         }
     }
 
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String imageFileName = "IMG_" + timeStamp + "_";
+
+        File storeDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(imageFileName, ".jpg", storeDir);
+
+        imageFilePath = image.getAbsolutePath();
+        return image;
+    }
+
+    private void openCameraIntent() {
+        Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        if (pictureIntent.resolveActivity(getPackageManager()) != null) {
+            File photoFile = null;
+
+            try {
+                photoFile = createImageFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", photoFile);
+                pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+
+                startActivityForResult(pictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_new_item, menu);
@@ -193,8 +234,8 @@ public class NewStockActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_save:
-                    saveStockItem();
-                    finish();
+                saveStockItem();
+                finish();
                 return true;
             case R.id.action_delete:
                 return true;
@@ -205,4 +246,12 @@ public class NewStockActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE) {
+            if (resultCode == Activity.RESULT_OK) {
+                Picasso.get().load(imageFilePath).into(mImageView);
+            }
+        }
+    }
 }

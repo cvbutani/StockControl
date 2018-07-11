@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.chirag.stockcontrol">
-    <uses-feature android:name="android.hardware.camera"
+
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="false" />
+
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -23,9 +28,20 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".StockActivity" />
         </activity>
+
         <provider
-            android:authorities="com.example.chirag.stockcontrol"
             android:name=".data.StockProvider"
-            android:exported="false"/>
+            android:authorities="com.example.chirag.stockcontrol"
+            android:exported="false" />
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.example.chirag.stockcontrol.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths">
+            </meta-data>
+        </provider>
     </application>
 </manifest>
