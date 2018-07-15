@@ -2,6 +2,7 @@ package com.example.chirag.stockcontrol;
 
 import android.app.LoaderManager;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.content.Loader;
 
 import android.database.Cursor;
 
+import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 
@@ -18,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.chirag.stockcontrol.data.StockContract.StockEntry;
@@ -27,7 +30,7 @@ public class StockActivity extends AppCompatActivity implements LoaderManager.Lo
 
     private StockCursorAdapter mStockCursorAdapter;
     private StockDbhelper mStockDbHelper;
-    public static final int STOCK_LOADER =0;
+    public static final int STOCK_LOADER = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,16 +54,16 @@ public class StockActivity extends AppCompatActivity implements LoaderManager.Lo
         mStockCursorAdapter = new StockCursorAdapter(this, null);
         stockListView.setAdapter(mStockCursorAdapter);
 
-//        stockListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Intent intent = new Intent(StockActivity.this, NewStockActivity.class);
-//                Uri currentItemUri = ContentUris.withAppendedId(StockEntry.CONTENT_URI, id);
-//                intent.setData(currentItemUri);
-//                startActivity(intent);
-//            }
-//        });
-        
+        stockListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(StockActivity.this, NewStockActivity.class);
+                Uri currentItemUri = ContentUris.withAppendedId(StockEntry.CONTENT_URI, id);
+                intent.setData(currentItemUri);
+                startActivity(intent);
+            }
+        });
+
         getLoaderManager().initLoader(STOCK_LOADER, null, this);
     }
 
@@ -100,8 +103,9 @@ public class StockActivity extends AppCompatActivity implements LoaderManager.Lo
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        String[] project = {
+        String[] projection = {
                 StockEntry._ID,
+                StockEntry.COLUMN_ITEM_IMAGE,
                 StockEntry.COLUMN_ITEM_NAME,
                 StockEntry.COLUMN_ITEM_PRICE,
                 StockEntry.COLUMN_ITEM_QUANTITY,
@@ -110,12 +114,12 @@ public class StockActivity extends AppCompatActivity implements LoaderManager.Lo
                 StockEntry.COLUMN_ITEM_LOCATION,
                 StockEntry.COLUMN_ITEM_SUPPLIER
         };
-        return new CursorLoader(this, StockEntry.CONTENT_URI, project, null, null, null);
+        return new CursorLoader(this, StockEntry.CONTENT_URI, projection, null, null, null);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-    mStockCursorAdapter.swapCursor(data);
+        mStockCursorAdapter.swapCursor(data);
     }
 
     @Override

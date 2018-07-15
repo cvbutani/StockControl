@@ -2,9 +2,13 @@ package com.example.chirag.stockcontrol;
 
 import android.app.DatePickerDialog;
 
+import android.app.LoaderManager;
 import android.content.ContentValues;
+import android.content.CursorLoader;
 import android.content.Intent;
 
+import android.content.Loader;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -23,6 +27,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import android.text.TextUtils;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,7 +47,12 @@ import com.example.chirag.stockcontrol.data.StockContract.StockEntry;
 
 import java.util.Calendar;
 
-public class NewStockActivity extends AppCompatActivity {
+/**
+ * StockControl
+ * Created by Chirag on 06/07/18.
+ */
+
+public class NewStockActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private DatePickerDialog.OnDateSetListener mDateSetListener;
 
@@ -56,24 +66,32 @@ public class NewStockActivity extends AppCompatActivity {
     private EditText mSupplierEditText;
     private ImageView mImageView;
 
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    private Uri fileUri;
-    static final int MEDIA_TYPE_IMAGE = 1;
-    private int mCategory = 0;
-    private String imageFilePath;
-    Bitmap image = null;
+    public static final int STOCK_LOADER = 1;
+    public static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    int mCategory = 0;
+    Uri currentSelectedItemUri;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_item);
 
+        Intent intent = getIntent();
+        currentSelectedItemUri = intent.getData();
+
+        if (currentSelectedItemUri != null) {
+            setTitle("Edit Stock");
+            getLoaderManager().initLoader(STOCK_LOADER, null, this);
+        } else {
+            setTitle("Add New Stock Item");
+        }
+
         findAllViews();
 
         rlCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
             }
@@ -172,9 +190,9 @@ public class NewStockActivity extends AppCompatActivity {
         String name = mNameEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
         String quantityString = mQuantityEditText.getText().toString().trim();
-        String date = tvDatePicker.toString();
-        String location = mLocationEditText.toString().trim();
-        String supplier = mSupplierEditText.toString().trim();
+        String date = tvDatePicker.getText().toString().trim();
+        String location = mLocationEditText.getText().toString().trim();
+        String supplier = mSupplierEditText.getText().toString().trim();
 
         Bitmap bitmapImage = ((BitmapDrawable) mImageView.getDrawable()).getBitmap();
         if (!TextUtils.isEmpty(priceString)) {
@@ -196,6 +214,7 @@ public class NewStockActivity extends AppCompatActivity {
         values.put(StockEntry.COLUMN_ITEM_DATE, date);
         values.put(StockEntry.COLUMN_ITEM_LOCATION, location);
         values.put(StockEntry.COLUMN_ITEM_SUPPLIER, supplier);
+
 
         Uri newUri = getContentResolver().insert(StockEntry.CONTENT_URI, values);
 
@@ -234,5 +253,88 @@ public class NewStockActivity extends AppCompatActivity {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             mImageView.setImageBitmap(photo);
         }
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String[] projection = {
+                StockEntry._ID,
+                StockEntry.COLUMN_ITEM_IMAGE,
+                StockEntry.COLUMN_ITEM_NAME,
+                StockEntry.COLUMN_ITEM_PRICE,
+                StockEntry.COLUMN_ITEM_QUANTITY,
+                StockEntry.COLUMN_ITEM_DATE,
+                StockEntry.COLUMN_ITEM_CATEGORY,
+                StockEntry.COLUMN_ITEM_LOCATION,
+                StockEntry.COLUMN_ITEM_SUPPLIER
+        };
+        return new CursorLoader(this, currentSelectedItemUri, projection, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if (data.moveToFirst()) {
+            int imageColumnIndex = data.getColumnIndex(StockEntry.COLUMN_ITEM_IMAGE);
+            int nameColumnIndex = data.getColumnIndex(StockEntry.COLUMN_ITEM_NAME);
+            int priceColumnIndex = data.getColumnIndex(StockEntry.COLUMN_ITEM_PRICE);
+            int quantityColumnIndex = data.getColumnIndex(StockEntry.COLUMN_ITEM_QUANTITY);
+            int dateColumnIndex = data.getColumnIndex(StockEntry.COLUMN_ITEM_DATE);
+            int categoryColumnIndex = data.getColumnIndex(StockEntry.COLUMN_ITEM_CATEGORY);
+            int locationColumnIndex = data.getColumnIndex(StockEntry.COLUMN_ITEM_LOCATION);
+            int supplierColumnIndex = data.getColumnIndex(StockEntry.COLUMN_ITEM_SUPPLIER);
+
+            byte[] bitmap = data.getBlob(imageColumnIndex);
+
+            Bitmap img = ImageCapture.getImage(bitmap);
+            String name = data.getString(nameColumnIndex);
+            int price = data.getInt(priceColumnIndex);
+            int quantity = data.getInt(quantityColumnIndex);
+            String location = data.getString(locationColumnIndex);
+            String supplier = data.getString(supplierColumnIndex);
+            String date = data.getString(dateColumnIndex);
+            int category = data.getInt(categoryColumnIndex);
+
+            mNameEditText.setText(name);
+            mImageView.setImageBitmap(img);
+            mPriceEditText.setText(Integer.toString(price));
+            mQuantityEditText.setText(Integer.toString(quantity));
+            tvDatePicker.setText(date);
+            mLocationEditText.setText(location);
+            mSupplierEditText.setText(supplier);
+            switch (category) {
+                case StockEntry.CATEGORY_ADULT_FASHION:
+                    mCategorySpinner.setSelection(1);
+                    break;
+                case StockEntry.CATEGORY_BABY_CLOTHING:
+                    mCategorySpinner.setSelection(2);
+                    break;
+                case StockEntry.CATEGORY_BEAUTY_COSMETICS:
+                    mCategorySpinner.setSelection(3);
+                    break;
+                case StockEntry.CATEGORY_BOOKS:
+                    mCategorySpinner.setSelection(4);
+                    break;
+                case StockEntry.CATEGORY_ELECTRONICS:
+                    mCategorySpinner.setSelection(5);
+                    break;
+                case StockEntry.CATEGORY_FOOD:
+                    mCategorySpinner.setSelection(6);
+                    break;
+                case StockEntry.CATEGORY_HEALTH:
+                    mCategorySpinner.setSelection(7);
+                    break;
+                case StockEntry.CATEGORY_HOUSEWARE:
+                    mCategorySpinner.setSelection(8);
+                    break;
+                case StockEntry.CATEGORY_GAMES:
+                    mCategorySpinner.setSelection(9);
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
     }
 }
