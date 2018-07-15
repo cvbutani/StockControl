@@ -5,7 +5,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp">
 
@@ -14,8 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp">
+            android:layout_marginBottom="16dp">
 
             <ImageView
                 android:id="@+id/inventory_image"
@@ -27,7 +26,9 @@
             <TextView
                 android:layout_width="128dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/inventory_image"
+                android:layout_alignBottom="@+id/inventory_image"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:background="#FF0000"
                 android:text="Edit"
                 android:textAlignment="center"
@@ -40,6 +41,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Product Detail"
+                android:textStyle="bold"
+                android:textSize="20sp"/>
 
             <!--Item Name-->
             <LinearLayout
@@ -222,7 +230,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Supplier" />
+                android:text="Supplier"
+                android:textStyle="bold"
+                android:textSize="20sp"/>
             <!-- Supplier -->
             <LinearLayout
                 android:id="@+id/container_supplier"
