@@ -6,8 +6,10 @@
         android:name="android.hardware.camera"
         android:required="false" />
 
-    <uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -35,13 +37,12 @@
             android:exported="false" />
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.example.chirag.stockcontrol.provider"
+            android:authorities="com.example.chirag.stockcontrol.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths">
-            </meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
     </application>
 </manifest>

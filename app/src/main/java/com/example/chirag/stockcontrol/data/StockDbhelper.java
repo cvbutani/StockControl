@@ -20,6 +20,7 @@ public class StockDbhelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String SQL_CREATE_INVENTORY_TABLE = "CREATE TABLE " + StockEntry.TABLE_NAME + " (" +
                 StockEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                StockEntry.COLUMN_ITEM_IMAGE + " BLOB, " +
                 StockEntry.COLUMN_ITEM_NAME + " TEXT NOT NULL, " +
                 StockEntry.COLUMN_ITEM_PRICE + " INTEGER NOT NULL DEFAULT 0, " +
                 StockEntry.COLUMN_ITEM_QUANTITY + " INTEGER DEFAULT 0, " +

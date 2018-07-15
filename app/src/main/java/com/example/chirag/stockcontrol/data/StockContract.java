@@ -33,6 +33,7 @@ public class StockContract {
         public static final String COLUMN_ITEM_CATEGORY = "category";
         public static final String COLUMN_ITEM_LOCATION = "location";
         public static final String COLUMN_ITEM_SUPPLIER = "supplier";
+        public static final String COLUMN_ITEM_IMAGE = "image";
 
         public static final int CATEGORY_UNKNOWN = 0;           //  UNKNOWN
         public static final int CATEGORY_ELECTRONICS = 5;       //  ELECTRONICS
