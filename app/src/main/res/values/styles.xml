@@ -28,10 +28,9 @@
     <style name="EditorUnitsStyle">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_alignParentRight">true</item>
-        <item name="android:paddingRight">16dp</item>
-        <item name="android:paddingTop">16dp</item>
-        <item name="android:textAppearance">?android:textAppearanceSmall</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
     </style>
 
 </resources>
