@@ -35,6 +35,7 @@ import android.view.View;
 
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -70,6 +71,8 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
     private ImageView mImageView;
     private EditText mSupplierContactNumberEditText;
     private EditText mSupplerEmailId;
+    private Button mDeleteButton;
+    private Button mPlaceOrder;
 
     private boolean mStockHasChanged = false;
 
@@ -137,11 +140,14 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
                 tvDatePicker.setText(date);
             }
         };
-
-        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-        StrictMode.setVmPolicy(builder.build());
-
         setupSpinner();
+
+        mDeleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDeleteConfirmationDialog();
+            }
+        });
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -157,6 +163,8 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
         mImageView = findViewById(R.id.inventory_image);
         mSupplierContactNumberEditText = findViewById(R.id.edit_item_supplier_contact_number);
         mSupplerEmailId = findViewById(R.id.edit_item_supplier_email_id);
+        mDeleteButton = findViewById(R.id.delete_item);
+        mPlaceOrder = findViewById(R.id.place_order);
 
         tvDatePicker.setOnTouchListener(mTouchListener);
         rlCamera.setOnTouchListener(mTouchListener);
@@ -567,5 +575,6 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
                         Toast.LENGTH_SHORT).show();
             }
         }
+        finish();
     }
 }
