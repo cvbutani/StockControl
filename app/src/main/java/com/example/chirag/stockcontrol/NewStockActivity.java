@@ -30,6 +30,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 
 import android.widget.AdapterView;
@@ -70,11 +71,21 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
     private EditText mSupplierContactNumberEditText;
     private EditText mSupplerEmailId;
 
+    private boolean mStockChanged = false;
+
     public static final int STOCK_LOADER = 1;
     public static final int REQUEST_IMAGE_CAPTURE = 1;
 
     int mCategory = 0;
     Uri currentSelectedItemUri;
+
+    private View.OnTouchListener mTouchListener = new View.OnTouchListener(){
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            mStockChanged = true;
+            return false;
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,6 +99,7 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
             setTitle("Edit Stock");
             getLoaderManager().initLoader(STOCK_LOADER, null, this);
         } else {
+            invalidateOptionsMenu();
             setTitle("Add New Stock Item");
         }
 
@@ -144,6 +156,18 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
         mImageView = findViewById(R.id.inventory_image);
         mSupplierContactNumberEditText = findViewById(R.id.edit_item_supplier_contact_number);
         mSupplerEmailId = findViewById(R.id.edit_item_supplier_email_id);
+
+        tvDatePicker.setOnTouchListener(mTouchListener);
+        rlCamera.setOnTouchListener(mTouchListener);
+        mNameEditText.setOnTouchListener(mTouchListener);
+        mPriceEditText.setOnTouchListener(mTouchListener);
+        mQuantityEditText.setOnTouchListener(mTouchListener);
+        mLocationEditText.setOnTouchListener(mTouchListener);
+        mSupplierEditText.setOnTouchListener(mTouchListener);
+        mSupplierContactNumberEditText.setOnTouchListener(mTouchListener);
+        mCategorySpinner.setOnTouchListener(mTouchListener);
+        mImageView.setOnTouchListener(mTouchListener);
+        mSupplerEmailId.setOnTouchListener(mTouchListener);
     }
 
     private void setupSpinner() {
@@ -183,7 +207,7 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+                mCategory = StockEntry.CATEGORY_UNKNOWN;
             }
         });
     }
