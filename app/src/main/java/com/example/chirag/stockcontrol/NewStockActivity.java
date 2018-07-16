@@ -101,9 +101,13 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
         if (mCurrentSelectedStockItem != null) {
             setTitle("Edit Stock");
             getLoaderManager().initLoader(STOCK_LOADER, null, this);
+            mDeleteButton.setVisibility(View.VISIBLE);
+            mPlaceOrder.setVisibility(View.VISIBLE);
         } else {
             invalidateOptionsMenu();
             setTitle("Add New Stock Item");
+            mPlaceOrder.setVisibility(View.GONE);
+            mDeleteButton.setVisibility(View.GONE);
         }
 
         findAllViewsAndAttachListener();
