@@ -489,6 +489,13 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
 
     }
 
+    /**
+     * Show a dialog that warns the user there are unsaved changes that will be lost
+     * if they continue leaving the editor.
+     *
+     * @param discardButtonClickListener    is the click listener for what to do when the user
+     *                                      confirms they want to discard their changes
+     */
     private void showUnsavedChangesDialog(DialogInterface.OnClickListener discardButtonClickListener) {
         //  Create an AlertDialog.Builder and set the message and click listeners
         //  for the positive and negative buttons on the dialog.
@@ -506,6 +513,36 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
             }
         });
 
+        //  Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    /**
+     * Prompt the user to confirm that they want to delete this pet.
+     */
+    private void showDeleteConfirmationDialog(){
+        //  Create an AlertDialog.Builder and set the message and click listeners
+        //  fir the positive and negative buttons on the dialog.
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.delete_dialog_msg);
+        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //  User clicked the "Delete" button, so delete the pet.
+                deleteStockItem();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //  User clicked the "Cancel" button, so dismiss the dialog
+                //  and continue editing the stock item.
+                if (dialogInterface != null) {
+                    dialogInterface.dismiss();
+                }
+            }
+        });
         //  Create and show the AlertDialog
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
