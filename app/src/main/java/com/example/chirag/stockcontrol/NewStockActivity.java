@@ -67,6 +67,8 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
     private EditText mLocationEditText;
     private EditText mSupplierEditText;
     private ImageView mImageView;
+    private EditText mSupplierContactNumberEditText;
+    private EditText mSupplerEmailId;
 
     public static final int STOCK_LOADER = 1;
     public static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -140,6 +142,8 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
         mSupplierEditText = findViewById(R.id.edit_item_supplier);
         mCategorySpinner = findViewById(R.id.spinner_category);
         mImageView = findViewById(R.id.inventory_image);
+        mSupplierContactNumberEditText = findViewById(R.id.edit_item_supplier_contact_number);
+        mSupplerEmailId = findViewById(R.id.edit_item_supplier_email_id);
     }
 
     private void setupSpinner() {
@@ -193,8 +197,12 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
         String date = tvDatePicker.getText().toString().trim();
         String location = mLocationEditText.getText().toString().trim();
         String supplier = mSupplierEditText.getText().toString().trim();
+        String supplierContactNumber = mSupplierContactNumberEditText.getText().toString().trim();
+        String supplierEmailId = mSupplerEmailId.getText().toString().trim();
 
         Bitmap bitmapImage = ((BitmapDrawable) mImageView.getDrawable()).getBitmap();
+        byte[] mByteImage = ImageCapture.getBytes(bitmapImage);
+
         if (!TextUtils.isEmpty(priceString)) {
             price = Integer.parseInt(priceString);
         }
@@ -203,7 +211,6 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
             quantity = Integer.parseInt(quantityString);
         }
 
-        byte[] mByteImage = ImageCapture.getBytes(bitmapImage);
         ContentValues values = new ContentValues();
 
         values.put(StockEntry.COLUMN_ITEM_IMAGE, mByteImage);
@@ -214,7 +221,8 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
         values.put(StockEntry.COLUMN_ITEM_DATE, date);
         values.put(StockEntry.COLUMN_ITEM_LOCATION, location);
         values.put(StockEntry.COLUMN_ITEM_SUPPLIER, supplier);
-
+        values.put(StockEntry.COLUMN_ITEM_SUPPLIER_NUMBER, supplierContactNumber);
+        values.put(StockEntry.COLUMN_ITEM_SUPPLIER_EMAIL, supplierEmailId);
 
         Uri newUri = getContentResolver().insert(StockEntry.CONTENT_URI, values);
 
@@ -266,7 +274,9 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
                 StockEntry.COLUMN_ITEM_DATE,
                 StockEntry.COLUMN_ITEM_CATEGORY,
                 StockEntry.COLUMN_ITEM_LOCATION,
-                StockEntry.COLUMN_ITEM_SUPPLIER
+                StockEntry.COLUMN_ITEM_SUPPLIER,
+                StockEntry.COLUMN_ITEM_SUPPLIER_NUMBER,
+                StockEntry.COLUMN_ITEM_SUPPLIER_EMAIL
         };
         return new CursorLoader(this, currentSelectedItemUri, projection, null, null, null);
     }
@@ -282,6 +292,8 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
             int categoryColumnIndex = data.getColumnIndex(StockEntry.COLUMN_ITEM_CATEGORY);
             int locationColumnIndex = data.getColumnIndex(StockEntry.COLUMN_ITEM_LOCATION);
             int supplierColumnIndex = data.getColumnIndex(StockEntry.COLUMN_ITEM_SUPPLIER);
+            int supplierNumberColumnIndex = data.getColumnIndex(StockEntry.COLUMN_ITEM_SUPPLIER_NUMBER);
+            int supplierEmailIdColumnIndex = data.getColumnIndex(StockEntry.COLUMN_ITEM_SUPPLIER_EMAIL);
 
             byte[] bitmap = data.getBlob(imageColumnIndex);
 
@@ -293,6 +305,8 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
             String supplier = data.getString(supplierColumnIndex);
             String date = data.getString(dateColumnIndex);
             int category = data.getInt(categoryColumnIndex);
+            String supplierNumber = data.getString(supplierNumberColumnIndex);
+            String supplierEmail = data.getString(supplierEmailIdColumnIndex);
 
             mNameEditText.setText(name);
             mImageView.setImageBitmap(img);
@@ -301,6 +315,9 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
             tvDatePicker.setText(date);
             mLocationEditText.setText(location);
             mSupplierEditText.setText(supplier);
+            mSupplierContactNumberEditText.setText(supplierNumber);
+            mSupplerEmailId.setText(supplierEmail);
+
             switch (category) {
                 case StockEntry.CATEGORY_ADULT_FASHION:
                     mCategorySpinner.setSelection(1);

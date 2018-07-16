@@ -112,7 +112,9 @@ public class StockActivity extends AppCompatActivity implements LoaderManager.Lo
                 StockEntry.COLUMN_ITEM_DATE,
                 StockEntry.COLUMN_ITEM_CATEGORY,
                 StockEntry.COLUMN_ITEM_LOCATION,
-                StockEntry.COLUMN_ITEM_SUPPLIER
+                StockEntry.COLUMN_ITEM_SUPPLIER,
+                StockEntry.COLUMN_ITEM_SUPPLIER_NUMBER,
+                StockEntry.COLUMN_ITEM_SUPPLIER_EMAIL
         };
         return new CursorLoader(this, StockEntry.CONTENT_URI, projection, null, null, null);
     }
