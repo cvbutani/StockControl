@@ -148,6 +148,28 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
                 showDeleteConfirmationDialog();
             }
         });
+
+        mPlaceOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String name = mNameEditText.getText().toString().trim();
+                String quantity = mQuantityEditText.getText().toString().trim();
+                String supplierEmail = mSupplerEmailId.getText().toString().trim();
+                String messageText = "Hello,\n" + "We Would like to order " + name + ". \n" +
+                        "Currently, we have " + quantity + " quantity in stock.\n" +
+                        "Can you please send us 100 ?\n" +
+                        "Please provide us tracking number asap.\n" +
+                        "Thank you";
+
+                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                intent.setData(Uri.parse("mailto:" + supplierEmail));
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Place Order for " + name);
+                intent.putExtra(Intent.EXTRA_TEXT, messageText);
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -501,8 +523,8 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
      * Show a dialog that warns the user there are unsaved changes that will be lost
      * if they continue leaving the editor.
      *
-     * @param discardButtonClickListener    is the click listener for what to do when the user
-     *                                      confirms they want to discard their changes
+     * @param discardButtonClickListener is the click listener for what to do when the user
+     *                                   confirms they want to discard their changes
      */
     private void showUnsavedChangesDialog(DialogInterface.OnClickListener discardButtonClickListener) {
         //  Create an AlertDialog.Builder and set the message and click listeners
@@ -529,7 +551,7 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
     /**
      * Prompt the user to confirm that they want to delete this pet.
      */
-    private void showDeleteConfirmationDialog(){
+    private void showDeleteConfirmationDialog() {
         //  Create an AlertDialog.Builder and set the message and click listeners
         //  fir the positive and negative buttons on the dialog.
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -556,7 +578,7 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
         alertDialog.show();
     }
 
-    private void deleteStockItem(){
+    private void deleteStockItem() {
         //  Only perform the delete tif this is an existing stock item.
         if (mCurrentSelectedStockItem != null) {
             //  Call the ContentResolver to delete the pet at the given content URI.
