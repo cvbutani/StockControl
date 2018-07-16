@@ -42,5 +42,7 @@
     <string name="delete_dialog_msg">Delete this stock item?</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
+    <string name="delete_stock_failure">Error with deleting stock item</string>
+    <string name="delete_stock_success">Sucessfully deleted</string>
 
 </resources>

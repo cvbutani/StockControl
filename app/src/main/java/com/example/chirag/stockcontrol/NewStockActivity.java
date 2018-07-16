@@ -547,4 +547,25 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
+
+    private void deleteStockItem(){
+        //  Only perform the delete tif this is an existing stock item.
+        if (mCurrentSelectedStockItem != null) {
+            //  Call the ContentResolver to delete the pet at the given content URI.
+            //  Pass in null for the selection and selection args because the mCurrentSelectedStockItem
+            //  content URI already identifies the stock item that we want.
+            int rowsDeleted = getContentResolver().delete(mCurrentSelectedStockItem, null, null);
+
+            //  Show a toast message depending on whether or not the delete was successful.
+            if (rowsDeleted == 0) {
+                //  If no rows were deleted, then there was an error with the delete.
+                Toast.makeText(this, getString(R.string.delete_stock_failure),
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                //  The delete was successful and we can display a toast.
+                Toast.makeText(this, getString(R.string.delete_stock_success),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 }
