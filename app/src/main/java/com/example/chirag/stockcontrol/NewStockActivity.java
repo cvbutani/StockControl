@@ -1,18 +1,19 @@
 package com.example.chirag.stockcontrol;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 
 import android.net.Uri;
 
@@ -27,7 +28,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import android.text.TextUtils;
 
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -46,9 +46,9 @@ import android.widget.Toast;
 import com.example.chirag.stockcontrol.data.ImageCapture;
 import com.example.chirag.stockcontrol.data.StockContract.StockEntry;
 
-import java.text.SimpleDateFormat;
+import org.w3c.dom.Text;
+
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * StockControl
@@ -71,18 +71,18 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
     private EditText mSupplierContactNumberEditText;
     private EditText mSupplerEmailId;
 
-    private boolean mStockChanged = false;
+    private boolean mStockHasChanged = false;
 
     public static final int STOCK_LOADER = 1;
     public static final int REQUEST_IMAGE_CAPTURE = 1;
 
     int mCategory = 0;
-    Uri currentSelectedItemUri;
+    Uri mCurrentSelectedStockItem;
 
-    private View.OnTouchListener mTouchListener = new View.OnTouchListener(){
+    private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
-            mStockChanged = true;
+            mStockHasChanged = true;
             return false;
         }
     };
@@ -93,9 +93,9 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
         setContentView(R.layout.activity_new_item);
 
         Intent intent = getIntent();
-        currentSelectedItemUri = intent.getData();
+        mCurrentSelectedStockItem = intent.getData();
 
-        if (currentSelectedItemUri != null) {
+        if (mCurrentSelectedStockItem != null) {
             setTitle("Edit Stock");
             getLoaderManager().initLoader(STOCK_LOADER, null, this);
         } else {
@@ -103,7 +103,7 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
             setTitle("Add New Stock Item");
         }
 
-        findAllViews();
+        findAllViewsAndAttachListener();
 
         rlCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,7 +144,8 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
         setupSpinner();
     }
 
-    private void findAllViews() {
+    @SuppressLint("ClickableViewAccessibility")
+    private void findAllViewsAndAttachListener() {
         tvDatePicker = findViewById(R.id.edit_item_date);
         rlCamera = findViewById(R.id.camera);
         mNameEditText = findViewById(R.id.edit_item_name);
@@ -175,7 +176,6 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
                 R.array.array_category_options, android.R.layout.simple_spinner_item);
 
         categorySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-
         mCategorySpinner.setAdapter(categorySpinnerAdapter);
 
         mCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -212,7 +212,12 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
         });
     }
 
+    /**
+     * Get User input from editor and save stock item in database.
+     */
     private void saveStockItem() {
+        //  Read from input fields
+        //  Use trim to eliminate leading or trailing white space
         double price = 0;
         int quantity = 0;
         String name = mNameEditText.getText().toString().trim();
@@ -227,14 +232,32 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
         Bitmap bitmapImage = ((BitmapDrawable) mImageView.getDrawable()).getBitmap();
         byte[] mByteImage = ImageCapture.getBytes(bitmapImage);
 
+        //  Check if this is supposed to be a new stock item
+        //  and check if all the fields in the editor are blank.
+        if (mCurrentSelectedStockItem == null &&
+                TextUtils.isEmpty(name) && TextUtils.isEmpty(priceString) &&
+                TextUtils.isEmpty(quantityString) && TextUtils.isEmpty(date) &&
+                TextUtils.isEmpty(location) && TextUtils.isEmpty(supplier) &&
+                TextUtils.isEmpty(supplierContactNumber) && TextUtils.isEmpty(supplierEmailId)) {
+            //  Since no fields were modified, we can return early without creating a new Stock.
+            //  No need to create ContentValues and no need to do any ContentProvider operations.
+            return;
+        }
+
+        //  If price is not provided by the user, don't try to parse the string into an
+        //  integer value. Use 0 by default.
         if (!TextUtils.isEmpty(priceString)) {
             price = Integer.parseInt(priceString);
         }
 
+        //  If quantity is not provided by the user, don't try to parse the string into an
+        //  integer value. Use 0 by default.
         if (!TextUtils.isEmpty(quantityString)) {
             quantity = Integer.parseInt(quantityString);
         }
 
+        //  Create a ContentValues object where column names are the keys,
+        //  and stock attributes from the editor are the values.
         ContentValues values = new ContentValues();
 
         values.put(StockEntry.COLUMN_ITEM_IMAGE, mByteImage);
@@ -248,12 +271,38 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
         values.put(StockEntry.COLUMN_ITEM_SUPPLIER_NUMBER, supplierContactNumber);
         values.put(StockEntry.COLUMN_ITEM_SUPPLIER_EMAIL, supplierEmailId);
 
-        Uri newUri = getContentResolver().insert(StockEntry.CONTENT_URI, values);
-
-        if (newUri != null) {
-            Toast.makeText(getApplicationContext(), "Item added", Toast.LENGTH_SHORT).show();
+        //  Determine if this is a new or existing stock item by checking if
+        //  mCurrentSelectedStockItem is null or not
+        if (mCurrentSelectedStockItem == null) {
+            //  This is a NEW stock item, so insert a new stock item into the provider,
+            //  returning the content URI for the new stock item.
+            Uri newUri = getContentResolver().insert(StockEntry.CONTENT_URI, values);
+            //  Show a toast message depending on whether or not the insertion was successful.
+            if (newUri != null) {
+                //  If the new content Uri is not null, then we can show successful toast.
+                Toast.makeText(getApplicationContext(), getString(R.string.new_stock_added_success),
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                //  otherwise, we can display an error with the insertion.
+                Toast.makeText(getApplicationContext(), getString(R.string.new_stock_added_failure),
+                        Toast.LENGTH_SHORT).show();
+            }
         } else {
-            Toast.makeText(getApplicationContext(), "Can't add this Item", Toast.LENGTH_SHORT).show();
+            //  This is an EXISTING stock items. Update the pet with content URI: mCurrentSelectedStockItems
+            //  and pass in the new ContentValues. Pass in null for the selection and selection args
+            //  because mCurrentSelectedStockItem will already identify the correct row in the database
+            //  that we want to modify.
+            int rowsChanged = getContentResolver().update(mCurrentSelectedStockItem, values, null, null);
+            //  Shows a toast message depending on whether or not update was successful.
+            if (rowsChanged == 0) {
+                //  If no rows were affected, then there was an error with the update.
+                Toast.makeText(getApplicationContext(), getString(R.string.update_stock_failure),
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                //  Otherwise, the update was successful and we can display a toast.
+                Toast.makeText(getApplicationContext(), getString(R.string.update_stock_success),
+                        Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -264,16 +313,52 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        //  If this is a new stock item, hide the "Delete" menu item.
+        if (mCurrentSelectedStockItem == null) {
+            MenuItem item = menu.findItem(R.id.action_delete);
+            item.setVisible(false);
+        }
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        //  User clicked on a menu option in the app bar overflow menu
         switch (item.getItemId()) {
+            //  Respond to a click on the "Save" menu option.
             case R.id.action_save:
+                //  Save stock item to database
                 saveStockItem();
+                //  Exit activity
                 finish();
                 return true;
+            //  Respond to a click on the "Delete" menu option
             case R.id.action_delete:
+                //Pop up confirmation dialog for deletion
+                showDeleteConfirmationDialog();
                 return true;
             case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(NewStockActivity.this);
+                //  If stock hasn't changed, continue with navigation up to parent activity
+                //  which is th {@link StockActivity}
+                if (!mStockHasChanged) {
+                    NavUtils.navigateUpFromSameTask(NewStockActivity.this);
+                    return true;
+                }
+
+                //  Otherwise if there are unsaved changes, setup a dialog to warn the user
+                //  Create a click listener to handle the user confirming that
+                //  changes should be discarded.
+                DialogInterface.OnClickListener discardButtonClickListener =
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                //  User clicked Discard button, navigate to parent activity.
+                                NavUtils.navigateUpFromSameTask(NewStockActivity.this);
+                            }
+                        };
+                showUnsavedChangesDialog(discardButtonClickListener);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -285,6 +370,31 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             mImageView.setImageBitmap(photo);
         }
+    }
+
+    /**
+     * This method is called when back button is pressed.
+     */
+    @Override
+    public void onBackPressed() {
+        //  If the stock item hasn't changed, continue with handling back button press
+        if (!mStockHasChanged) {
+            super.onBackPressed();
+            return;
+        }
+
+        //  Otherwise if there are unsaved changes, setup a dialog to warn the user.
+        //  Create a click listener to handle the user confirming that changes should be discarded.
+        DialogInterface.OnClickListener discardButtonClickListener =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //  User clicked "Discard" button, close the current activity.
+                        finish();
+                    }
+                };
+        //  Show dialog that there are unsaved changes
+        showUnsavedChangesDialog(discardButtonClickListener);
     }
 
     @Override
@@ -302,7 +412,7 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
                 StockEntry.COLUMN_ITEM_SUPPLIER_NUMBER,
                 StockEntry.COLUMN_ITEM_SUPPLIER_EMAIL
         };
-        return new CursorLoader(this, currentSelectedItemUri, projection, null, null, null);
+        return new CursorLoader(this, mCurrentSelectedStockItem, projection, null, null, null);
     }
 
     @Override
@@ -377,5 +487,27 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+    private void showUnsavedChangesDialog(DialogInterface.OnClickListener discardButtonClickListener) {
+        //  Create an AlertDialog.Builder and set the message and click listeners
+        //  for the positive and negative buttons on the dialog.
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.unsaved_changes_dialog_msg);
+        builder.setPositiveButton(R.string.discard, discardButtonClickListener);
+        builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //  User clicked the "Keep editing" button, so dismiss the dialog
+                //  and continue editing the stock item
+                if (dialogInterface != null) {
+                    dialogInterface.dismiss();
+                }
+            }
+        });
+
+        //  Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }
