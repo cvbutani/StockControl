@@ -32,7 +32,9 @@ public class StockContract {
         public static final String COLUMN_ITEM_DATE = "date";
         public static final String COLUMN_ITEM_CATEGORY = "category";
         public static final String COLUMN_ITEM_LOCATION = "location";
-        public static final String COLUMN_ITEM_SUPPLIER = "supplier";
+        public static final String COLUMN_ITEM_SUPPLIER = "supplier_name";
+        public static final String COLUMN_ITEM_SUPPLIER_NUMBER = "supplier_contact_number";
+        public static final String COLUMN_ITEM_SUPPLIER_EMAIL = "supplier_Email_Id";
         public static final String COLUMN_ITEM_IMAGE = "image";
 
         public static final int CATEGORY_UNKNOWN = 0;           //  UNKNOWN

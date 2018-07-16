@@ -45,7 +45,9 @@ import android.widget.Toast;
 import com.example.chirag.stockcontrol.data.ImageCapture;
 import com.example.chirag.stockcontrol.data.StockContract.StockEntry;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * StockControl
@@ -107,11 +109,9 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
 
                 DatePickerDialog dialog = new DatePickerDialog(
                         NewStockActivity.this,
-                        android.R.style.Theme_Holo_Dialog_NoActionBar,
+                        android.R.style.Theme_DeviceDefault_Light,
                         mDateSetListener,
                         year, month, day);
-
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dialog.show();
             }
         });

@@ -17,5 +17,20 @@
     <string name="category_health">HEALTH</string>
     <string name="category_housewares">HOUSEWARES / KITCHENWARES</string>
     <string name="category_toys_game">TOYS &amp; GAMES</string>
+    <string name="product_detail">Product Detail</string>
+    <string name="item_name">Item Name</string>
+    <string name="price">Price</string>
+    <string name="cad">CAD $</string>
+    <string name="quantity_available">Quantity Available</string>
+    <string name="date_received">Date Received</string>
+    <string name="pick_a_date">Pick a Date</string>
+    <string name="category">Category</string>
+    <string name="item_location">Item Location</string>
+    <string name="supplier">Supplier</string>
+    <string name="supplier_name">Supplier Name</string>
+    <string name="contact_number">Contact Number</string>
+    <string name="supplier_email_id">Supplier Email Id</string>
+    <string name="place_order">Place Order</string>
+    <string name="delete_item">Delete Item</string>
 
 </resources>
