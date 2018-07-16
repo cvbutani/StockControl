@@ -32,5 +32,17 @@
     <string name="supplier_email_id">Supplier Email Id</string>
     <string name="place_order">Place Order</string>
     <string name="delete_item">Delete Item</string>
+    <string name="new_stock_added_success">Item added</string>
+    <string name="new_stock_added_failure">Can\'t add this Item</string>
+    <string name="update_stock_failure">Update Failed</string>
+    <string name="update_stock_success">Successfully Updated</string>
+    <string name="unsaved_changes_dialog_msg">Discard your changes and quit editing?</string>
+    <string name="discard">Discard</string>
+    <string name="keep_editing">Keep Editing</string>
+    <string name="delete_dialog_msg">Delete this stock item?</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete_stock_failure">Error with deleting stock item</string>
+    <string name="delete_stock_success">Sucessfully deleted</string>
 
 </resources>

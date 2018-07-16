@@ -28,7 +28,7 @@ public class StockDbhelper extends SQLiteOpenHelper {
                 StockEntry.COLUMN_ITEM_CATEGORY + " INTEGER NOT NULL, " +
                 StockEntry.COLUMN_ITEM_LOCATION + " TEXT, " +
                 StockEntry.COLUMN_ITEM_SUPPLIER + " TEXT, " +
-                StockEntry.COLUMN_ITEM_SUPPLIER_NUMBER + " INTEGER, "+
+                StockEntry.COLUMN_ITEM_SUPPLIER_NUMBER + " TEXT, "+
                 StockEntry.COLUMN_ITEM_SUPPLIER_EMAIL + " TEXT);";
         Log.i("STOCK DATABASE HELPER: ", SQL_CREATE_INVENTORY_TABLE);
         db.execSQL(SQL_CREATE_INVENTORY_TABLE);
