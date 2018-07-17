@@ -30,10 +30,11 @@
                 android:layout_alignBottom="@id/inventory_image"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:background="#FF0000"
+                android:background="@color/colorPrimaryDark"
                 android:text="Edit"
                 android:textAlignment="center"
                 android:textColor="#fff"
+                android:textAppearance="?android:textAppearanceSmall"
                 android:textStyle="bold" />
 
         </RelativeLayout>
@@ -285,16 +286,19 @@
                 <Button
                     android:id="@+id/place_order"
                     style="@style/ButtonStyle"
+                    android:background="@color/colorPrimary"
                     android:text="@string/place_order" />
 
                 <Button
                     android:id="@+id/delete_item"
                     style="@style/ButtonStyle"
+                    android:background="#EC2929"
                     android:text="@string/delete_item" />
 
                 <Button
                     android:id="@+id/save_item"
                     style="@style/ButtonStyle"
+                    android:background="@color/colorPrimary"
                     android:text="@string/save_item" />
 
             </LinearLayout>

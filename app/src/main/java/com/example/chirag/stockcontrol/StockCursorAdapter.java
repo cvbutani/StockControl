@@ -32,21 +32,21 @@ public class StockCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         TextView tvName = (TextView) view.findViewById(R.id.name);
-        TextView tvQuantity = (TextView) view.findViewById(R.id.quantity);
+        TextView tvPrice = (TextView) view.findViewById(R.id.price);
         TextView tvCategory = view.findViewById(R.id.category);
-        ImageView ivProductImage = view.findViewById(R.id.image);
+//        ImageView ivProductImage = view.findViewById(R.id.image);
 
         String name = cursor.getString(cursor.getColumnIndexOrThrow(StockEntry.COLUMN_ITEM_NAME));
-        String quantity = cursor.getString(cursor.getColumnIndexOrThrow(StockEntry.COLUMN_ITEM_PRICE));
+        String price = cursor.getString(cursor.getColumnIndexOrThrow(StockEntry.COLUMN_ITEM_PRICE));
         int category = cursor.getInt(cursor.getColumnIndexOrThrow(StockEntry.COLUMN_ITEM_CATEGORY));
 
-        if (cursor.getColumnIndexOrThrow(StockEntry.COLUMN_ITEM_IMAGE) == 1) {
-            byte[] bitmap = cursor.getBlob(cursor.getColumnIndex(StockEntry.COLUMN_ITEM_IMAGE));
-            Bitmap imageBitmap = ImageCapture.getImage(bitmap);
-            ivProductImage.setImageBitmap(imageBitmap);
-        } else {
-            ivProductImage.setImageResource(R.drawable.inventory);
-        }
+//        if (cursor.getColumnIndexOrThrow(StockEntry.COLUMN_ITEM_IMAGE) == 1) {
+//            byte[] bitmap = cursor.getBlob(cursor.getColumnIndex(StockEntry.COLUMN_ITEM_IMAGE));
+//            Bitmap imageBitmap = ImageCapture.getImage(bitmap);
+//            ivProductImage.setImageBitmap(imageBitmap);
+//        } else {
+//            ivProductImage.setImageResource(R.drawable.inventory);
+//        }
 
         switch (category) {
             case StockEntry.CATEGORY_ADULT_FASHION:
@@ -82,7 +82,7 @@ public class StockCursorAdapter extends CursorAdapter {
         }
 
         tvName.setText(name);
-        tvQuantity.setText(quantity);
+        tvPrice.setText(price);
 
     }
 }
