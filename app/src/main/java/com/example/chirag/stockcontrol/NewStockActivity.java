@@ -101,13 +101,13 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
         if (mCurrentSelectedStockItem != null) {
             setTitle("Edit Stock");
             getLoaderManager().initLoader(STOCK_LOADER, null, this);
-            mDeleteButton.setVisibility(View.VISIBLE);
-            mPlaceOrder.setVisibility(View.VISIBLE);
+//            mDeleteButton.setVisibility(View.VISIBLE);
+//            mPlaceOrder.setVisibility(View.VISIBLE);
         } else {
             invalidateOptionsMenu();
             setTitle("Add New Stock Item");
-            mPlaceOrder.setVisibility(View.GONE);
-            mDeleteButton.setVisibility(View.GONE);
+//            mPlaceOrder.setVisibility(View.GONE);
+//            mDeleteButton.setVisibility(View.GONE);
         }
 
         findAllViewsAndAttachListener();
@@ -209,7 +209,7 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
         ArrayAdapter categorySpinnerAdapter = ArrayAdapter.createFromResource(this,
                 R.array.array_category_options, android.R.layout.simple_spinner_item);
 
-        categorySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        categorySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mCategorySpinner.setAdapter(categorySpinnerAdapter);
 
         mCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

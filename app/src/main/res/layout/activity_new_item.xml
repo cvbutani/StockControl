@@ -48,8 +48,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/product_detail"
-                android:textStyle="bold"
-                android:textSize="20sp"/>
+                android:textColor="#00796B"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:textStyle="bold" />
 
             <!--Item Name-->
             <LinearLayout
@@ -156,9 +157,9 @@
                         android:id="@+id/spinner_category"
                         android:layout_width="wrap_content"
                         android:layout_height="48dp"
+                        android:paddingEnd="16dp"
                         android:paddingRight="16dp"
-                        android:spinnerMode="dropdown"
-                        android:paddingEnd="16dp" />
+                        android:spinnerMode="dropdown" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -186,6 +187,12 @@
 
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="16dp"
+            android:background="#000" />
+
         <!--Supplier Information-->
         <LinearLayout
             android:layout_width="match_parent"
@@ -197,8 +204,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/supplier"
-                android:textStyle="bold"
-                android:textSize="20sp"/>
+                android:textColor="#00796B"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:textStyle="bold" />
 
             <!-- Supplier Name -->
             <LinearLayout
@@ -271,17 +279,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/place_order"
-                    android:text="@string/place_order"
-                    style="@style/ButtonStyle" />
+                    style="@style/ButtonStyle"
+                    android:text="@string/place_order" />
 
                 <Button
                     android:id="@+id/delete_item"
-                    android:text="@string/delete_item"
-                    style="@style/ButtonStyle" />
+                    style="@style/ButtonStyle"
+                    android:text="@string/delete_item" />
             </LinearLayout>
         </LinearLayout>
 
