@@ -73,14 +73,14 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
     private EditText mSupplerEmailId;
     private Button mDeleteButton;
     private Button mPlaceOrder;
-
-    private boolean mStockHasChanged = false;
+    private Button mSaveItem;
 
     public static final int STOCK_LOADER = 1;
     public static final int REQUEST_IMAGE_CAPTURE = 1;
 
-    int mCategory = 0;
-    Uri mCurrentSelectedStockItem;
+    private boolean mStockHasChanged = false;
+    private int mCategory = 0;
+    private Uri mCurrentSelectedStockItem;
 
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
@@ -95,22 +95,22 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_item);
 
+        findAllViewsAndAttachListener();
+
         Intent intent = getIntent();
         mCurrentSelectedStockItem = intent.getData();
 
         if (mCurrentSelectedStockItem != null) {
+            mDeleteButton.setVisibility(View.VISIBLE);
+            mPlaceOrder.setVisibility(View.VISIBLE);
             setTitle("Edit Stock");
             getLoaderManager().initLoader(STOCK_LOADER, null, this);
-//            mDeleteButton.setVisibility(View.VISIBLE);
-//            mPlaceOrder.setVisibility(View.VISIBLE);
         } else {
-            invalidateOptionsMenu();
+            mPlaceOrder.setVisibility(View.GONE);
+            mDeleteButton.setVisibility(View.GONE);
             setTitle("Add New Stock Item");
-//            mPlaceOrder.setVisibility(View.GONE);
-//            mDeleteButton.setVisibility(View.GONE);
         }
 
-        findAllViewsAndAttachListener();
 
         rlCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,6 +174,16 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
                 }
             }
         });
+
+        mSaveItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //  Save stock item to database
+                saveStockItem();
+                //  Exit activity
+                finish();
+            }
+        });
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -191,6 +201,7 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
         mSupplerEmailId = findViewById(R.id.edit_item_supplier_email_id);
         mDeleteButton = findViewById(R.id.delete_item);
         mPlaceOrder = findViewById(R.id.place_order);
+        mSaveItem = findViewById(R.id.save_item);
 
         tvDatePicker.setOnTouchListener(mTouchListener);
         rlCamera.setOnTouchListener(mTouchListener);
@@ -341,38 +352,9 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_new_item, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        //  If this is a new stock item, hide the "Delete" menu item.
-        if (mCurrentSelectedStockItem == null) {
-            MenuItem item = menu.findItem(R.id.action_delete);
-            item.setVisible(false);
-        }
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         //  User clicked on a menu option in the app bar overflow menu
         switch (item.getItemId()) {
-            //  Respond to a click on the "Save" menu option.
-            case R.id.action_save:
-                //  Save stock item to database
-                saveStockItem();
-                //  Exit activity
-                finish();
-                return true;
-            //  Respond to a click on the "Delete" menu option
-            case R.id.action_delete:
-                //Pop up confirmation dialog for deletion
-                showDeleteConfirmationDialog();
-                return true;
             case android.R.id.home:
                 //  If stock hasn't changed, continue with navigation up to parent activity
                 //  which is th {@link StockActivity}

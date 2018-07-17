@@ -291,6 +291,12 @@
                     android:id="@+id/delete_item"
                     style="@style/ButtonStyle"
                     android:text="@string/delete_item" />
+
+                <Button
+                    android:id="@+id/save_item"
+                    style="@style/ButtonStyle"
+                    android:text="@string/save_item" />
+
             </LinearLayout>
         </LinearLayout>
 
