@@ -18,7 +18,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 
 import android.os.Bundle;
-import android.os.StrictMode;
 
 import android.provider.MediaStore;
 
@@ -28,7 +27,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import android.text.TextUtils;
 
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -46,8 +44,6 @@ import android.widget.Toast;
 
 import com.example.chirag.stockcontrol.data.ImageCapture;
 import com.example.chirag.stockcontrol.data.StockContract.StockEntry;
-
-import org.w3c.dom.Text;
 
 import java.util.Calendar;
 

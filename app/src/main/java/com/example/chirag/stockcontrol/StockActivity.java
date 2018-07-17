@@ -1,10 +1,12 @@
 package com.example.chirag.stockcontrol;
 
+import android.app.AlertDialog;
 import android.app.LoaderManager;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 
@@ -21,8 +23,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import android.widget.AdapterView;
-import android.widget.ExpandableListView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.chirag.stockcontrol.data.StockContract.StockEntry;
 import com.example.chirag.stockcontrol.data.StockDbhelper;
@@ -72,6 +74,7 @@ public class StockActivity extends AppCompatActivity implements LoaderManager.Lo
         mStockDbHelper = new StockDbhelper(this);
         ContentValues values = new ContentValues();
 
+
         values.put(StockEntry.COLUMN_ITEM_NAME, "iPad");
         values.put(StockEntry.COLUMN_ITEM_PRICE, 299);
         values.put(StockEntry.COLUMN_ITEM_QUANTITY, 20);
@@ -96,11 +99,11 @@ public class StockActivity extends AppCompatActivity implements LoaderManager.Lo
                 insertData();
                 return true;
             case R.id.action_delete_all_entries:
+                showDeleteAllStockItemsDialog();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -128,5 +131,46 @@ public class StockActivity extends AppCompatActivity implements LoaderManager.Lo
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mStockCursorAdapter.swapCursor(null);
+    }
+
+    private void showDeleteAllStockItemsDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.delete_all_dialog_msg);
+        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //  User clicked the "Delete" button, so delete the pet.
+                deleteAllStockItems();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //  User clicked the "Cancel" button, so dismiss the dialog
+                //  and continue editing the stock item.
+                if (dialogInterface != null) {
+                    dialogInterface.dismiss();
+                }
+            }
+        });
+        //  Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private void deleteAllStockItems() {
+
+        int rowsDeleted = getContentResolver().delete(StockEntry.CONTENT_URI, null, null);
+
+        //  Show a toast message depending on whether or not the delete was successful.
+        if (rowsDeleted == 0) {
+            //  If no rows were deleted, then there was an error with the delete.
+            Toast.makeText(this, getString(R.string.delete_stock_failure),
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            //  The delete was successful and we can display a toast.
+            Toast.makeText(this, getString(R.string.delete_stock_success),
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 }
