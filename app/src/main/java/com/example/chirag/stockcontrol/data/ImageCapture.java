@@ -16,7 +16,7 @@ public class ImageCapture {
 
     public static byte[] getBytes(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 0, byteArrayOutputStream);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, byteArrayOutputStream);
         return byteArrayOutputStream.toByteArray();
     }
 
