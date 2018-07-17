@@ -73,5 +73,7 @@
     <string name="save_item">Save Item</string>
 
     <string name="delete_all_dialog_msg">Delete all stock items?</string>
+    <string name="enter_quantity">Enter Quantity</string>
+    <string name="edit">Edit</string>
 
 </resources>

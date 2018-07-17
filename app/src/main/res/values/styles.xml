@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -22,6 +22,8 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:textAppearance">?android:textAppearanceMedium</item>
         <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:backgroundTint" tools:targetApi="lollipop">@color/colorPrimaryDark
+        </item>
     </style>
 
     <style name="EditorUnitsStyle">

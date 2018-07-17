@@ -6,6 +6,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.ColorSpace;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -51,10 +53,6 @@ public class StockCursorAdapter extends CursorAdapter {
         long stockId = cursor.getLong(cursor.getColumnIndexOrThrow(StockEntry._ID));
 
         updatedQuantity = quantity;
-
-        tvName.setText(name);
-        tvPrice.setText(price);
-
         final Uri selectedStockItem = ContentUris.withAppendedId(StockEntry.CONTENT_URI, stockId);
 
         ivButton.setOnClickListener(new View.OnClickListener() {
@@ -76,7 +74,21 @@ public class StockCursorAdapter extends CursorAdapter {
                 });
             }
         });
-        tvQuantity.setText(String.valueOf(updatedQuantity));
+
+        if (updatedQuantity == 0) {
+            tvQuantity.setTextColor(Color.RED);
+        } else if (updatedQuantity <= 15 && updatedQuantity >=1) {
+            tvQuantity.setTextColor(Color.parseColor("#FFBF00"));
+        } else {
+            tvQuantity.setTextColor(Color.BLACK);
+        }
+
+        if (Integer.parseInt(price) == 0){
+
+        }
+        tvName.setText(name);
+        tvPrice.setText("CAD $ " + price);
+        tvQuantity.setText("IN STOCK: " + String.valueOf(updatedQuantity));
 
         switch (category) {
             case StockEntry.CATEGORY_ADULT_FASHION:

@@ -22,7 +22,7 @@
                 android:layout_width="128dp"
                 android:layout_height="128dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/inventory" />
+                android:src="@drawable/ic_box" />
 
             <TextView
                 android:layout_width="128dp"
@@ -31,10 +31,10 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:background="@color/colorPrimaryDark"
-                android:text="Edit"
+                android:text="@string/edit"
                 android:textAlignment="center"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textColor="#fff"
-                android:textAppearance="?android:textAppearanceSmall"
                 android:textStyle="bold" />
 
         </RelativeLayout>
@@ -49,8 +49,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/product_detail"
-                android:textColor="#00796B"
                 android:textAppearance="?android:textAppearanceLarge"
+                android:textColor="#00796B"
                 android:textStyle="bold" />
 
             <!--Item Name-->
@@ -205,8 +205,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/supplier"
-                android:textColor="#00796B"
                 android:textAppearance="?android:textAppearanceLarge"
+                android:textColor="#00796B"
                 android:textStyle="bold" />
 
             <!-- Supplier Name -->
@@ -266,7 +266,7 @@
                 <!-- Input fields -->
                 <RelativeLayout style="@style/RelativeLayoutEditText">
 
-                    <!-- Weight field -->
+                    <!-- Email field -->
                     <EditText
                         android:id="@+id/edit_item_supplier_email_id"
                         style="@style/EditorFieldStyle"
@@ -275,19 +275,44 @@
                 </RelativeLayout>
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/place_order_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/place_order_quantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_weight="3"
+                    android:hint="@string/enter_quantity"
+                    android:inputType="number"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:textColor="@color/colorAccent" />
+
+                <Button
+                    android:id="@+id/place_order"
+                    android:layout_width="100dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:layout_margin="8dp"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:textColor="#FFF"
+                    android:background="@color/colorPrimary"
+                    android:text="@string/place_order" />
+
+            </LinearLayout>
+
             <!-- ORDER AND DELETE BUTTON -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:layout_marginTop="16dp"
+                android:gravity="center"
                 android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/place_order"
-                    style="@style/ButtonStyle"
-                    android:background="@color/colorPrimary"
-                    android:text="@string/place_order" />
 
                 <Button
                     android:id="@+id/delete_item"
@@ -302,6 +327,8 @@
                     android:text="@string/save_item" />
 
             </LinearLayout>
+
+
         </LinearLayout>
 
     </LinearLayout>

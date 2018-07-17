@@ -37,6 +37,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -57,19 +58,26 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
     private DatePickerDialog.OnDateSetListener mDateSetListener;
 
     private RelativeLayout rlCamera;
+    private LinearLayout mPlaceOrderLayout;
+
     private TextView tvDatePicker;
+
     private EditText mNameEditText;
     private EditText mPriceEditText;
     private EditText mQuantityEditText;
-    private Spinner mCategorySpinner;
     private EditText mLocationEditText;
     private EditText mSupplierEditText;
-    private ImageView mImageView;
     private EditText mSupplierContactNumberEditText;
     private EditText mSupplerEmailId;
+    private EditText mOrderQuantity;
+
+    private Spinner mCategorySpinner;
+
+    private ImageView mImageView;
     private Button mDeleteButton;
     private Button mPlaceOrder;
     private Button mSaveItem;
+
 
     public static final int STOCK_LOADER = 1;
     public static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -98,11 +106,11 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
 
         if (mCurrentSelectedStockItem != null) {
             mDeleteButton.setVisibility(View.VISIBLE);
-            mPlaceOrder.setVisibility(View.VISIBLE);
+            mPlaceOrderLayout.setVisibility(View.VISIBLE);
             setTitle("Edit Stock");
             getLoaderManager().initLoader(STOCK_LOADER, null, this);
         } else {
-            mPlaceOrder.setVisibility(View.GONE);
+            mPlaceOrderLayout.setVisibility(View.GONE);
             mDeleteButton.setVisibility(View.GONE);
             setTitle("Add New Stock Item");
         }
@@ -155,9 +163,11 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
                 String name = mNameEditText.getText().toString().trim();
                 String quantity = mQuantityEditText.getText().toString().trim();
                 String supplierEmail = mSupplerEmailId.getText().toString().trim();
+                String quantityOrder = mOrderQuantity.getText().toString().trim();
+
                 String messageText = "Hello,\n" + "We Would like to order " + name + ". \n" +
                         "Currently, we have " + quantity + " quantity in stock.\n" +
-                        "Can you please send us 100 ?\n" +
+                        "Can you please send us " + quantityOrder + " ?\n" +
                         "Please provide us tracking number asap.\n" +
                         "Thank you";
 
@@ -198,6 +208,8 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
         mDeleteButton = findViewById(R.id.delete_item);
         mPlaceOrder = findViewById(R.id.place_order);
         mSaveItem = findViewById(R.id.save_item);
+        mPlaceOrderLayout = findViewById(R.id.place_order_layout);
+        mOrderQuantity = findViewById(R.id.place_order_quantity);
 
         tvDatePicker.setOnTouchListener(mTouchListener);
         rlCamera.setOnTouchListener(mTouchListener);
@@ -210,6 +222,7 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
         mCategorySpinner.setOnTouchListener(mTouchListener);
         mImageView.setOnTouchListener(mTouchListener);
         mSupplerEmailId.setOnTouchListener(mTouchListener);
+        mOrderQuantity.setOnTouchListener(mTouchListener);
     }
 
     private void setupSpinner() {

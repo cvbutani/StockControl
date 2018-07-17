@@ -41,18 +41,6 @@
             tools:text="Electronics" />
 
         <TextView
-            android:id="@+id/cad"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toStartOf="@id/price"
-            android:fontFamily="sans-serif"
-            android:text="CAD $ "
-            android:textAppearance="?android:textAppearanceMediumInverse"
-            android:textColor="#2B3D4D"
-            android:layout_toLeftOf="@id/price" />
-
-        <TextView
             android:id="@+id/price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -65,18 +53,6 @@
             tools:text="500" />
 
         <TextView
-            android:id="@+id/quantityName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_toStartOf="@id/quantity"
-            android:fontFamily="sans-serif"
-            android:text="IN STOCK: "
-            android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="#2B3D4D"
-            android:layout_toLeftOf="@id/price" />
-
-        <TextView
             android:id="@+id/quantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -86,7 +62,7 @@
             android:fontFamily="sans-serif"
             android:textAppearance="?android:textAppearanceSmall"
             android:textColor="#2B3D4D"
-            android:text="500" />
+            tools:text="500" />
 
 
     </RelativeLayout>
