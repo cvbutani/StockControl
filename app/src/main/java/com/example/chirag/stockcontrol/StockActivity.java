@@ -67,6 +67,12 @@ public class StockActivity extends AppCompatActivity implements LoaderManager.Lo
         getLoaderManager().initLoader(STOCK_LOADER, null, this);
     }
 
+    @Override
+    protected void onResume() {
+        getLoaderManager().restartLoader(STOCK_LOADER,null,this);
+        super.onResume();
+    }
+
     private void insertData() {
         StockDbhelper mStockDbHelper = new StockDbhelper(this);
         ContentValues values = new ContentValues();

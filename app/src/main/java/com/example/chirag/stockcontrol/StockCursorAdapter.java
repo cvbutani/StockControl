@@ -25,6 +25,8 @@ import com.example.chirag.stockcontrol.data.StockContract.StockEntry;
 
 public class StockCursorAdapter extends CursorAdapter {
 
+    private int updatedQuantity = 0;
+
     StockCursorAdapter(Context context, Cursor cursor) {
         super(context, cursor, 0);
     }
@@ -35,35 +37,35 @@ public class StockCursorAdapter extends CursorAdapter {
     }
 
     @Override
-    public void bindView(View view, final Context context, final Cursor cursor) {
-        TextView tvName = (TextView) view.findViewById(R.id.name);
-        TextView tvPrice = (TextView) view.findViewById(R.id.price);
-        TextView tvCategory = (TextView) view.findViewById(R.id.category);
-        final TextView tvQuantity = (TextView) view.findViewById(R.id.quantity);
-        ImageView ivButton = (ImageView) view.findViewById(R.id.image);
+    public void bindView(View newView, final Context context, Cursor cursor) {
+        TextView tvName = (TextView) newView.findViewById(R.id.name);
+        TextView tvPrice = (TextView) newView.findViewById(R.id.price);
+        TextView tvCategory = (TextView) newView.findViewById(R.id.category);
+        final TextView tvQuantity = (TextView) newView.findViewById(R.id.quantity);
+        ImageView ivButton = (ImageView) newView.findViewById(R.id.image);
 
         String name = cursor.getString(cursor.getColumnIndexOrThrow(StockEntry.COLUMN_ITEM_NAME));
         String price = cursor.getString(cursor.getColumnIndexOrThrow(StockEntry.COLUMN_ITEM_PRICE));
         int category = cursor.getInt(cursor.getColumnIndexOrThrow(StockEntry.COLUMN_ITEM_CATEGORY));
-        int quantity = cursor.getInt(cursor.getColumnIndexOrThrow(StockEntry.COLUMN_ITEM_QUANTITY));
+        final int quantity = cursor.getInt(cursor.getColumnIndexOrThrow(StockEntry.COLUMN_ITEM_QUANTITY));
         long stockId = cursor.getLong(cursor.getColumnIndexOrThrow(StockEntry._ID));
+
+        updatedQuantity = quantity;
 
         tvName.setText(name);
         tvPrice.setText(price);
-        tvQuantity.setText(String.valueOf(quantity));
 
         final Uri selectedStockItem = ContentUris.withAppendedId(StockEntry.CONTENT_URI, stockId);
+
         ivButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int quantity = cursor.getInt(cursor.getColumnIndexOrThrow(StockEntry.COLUMN_ITEM_QUANTITY));
                 if (quantity > 0) {
-                    quantity = quantity - 1;
+                    updatedQuantity = quantity - 1;
                     Toast.makeText(context, "Quantity Updated", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(context, "Insufficiant Quantity", Toast.LENGTH_SHORT).show();
                 }
-                final int updatedQuantity = quantity;
                 AsyncTask.execute(new Runnable() {
                     @Override
                     public void run() {
@@ -72,9 +74,10 @@ public class StockCursorAdapter extends CursorAdapter {
                         context.getContentResolver().update(selectedStockItem, contentValues, null, null);
                     }
                 });
-                tvQuantity.setText(String.valueOf(updatedQuantity));
             }
         });
+        tvQuantity.setText(String.valueOf(updatedQuantity));
+
         switch (category) {
             case StockEntry.CATEGORY_ADULT_FASHION:
                 tvCategory.setText(R.string.category_adult_clothing);
