@@ -33,20 +33,13 @@ public class StockCursorAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         TextView tvName = (TextView) view.findViewById(R.id.name);
         TextView tvPrice = (TextView) view.findViewById(R.id.price);
-        TextView tvCategory = view.findViewById(R.id.category);
-//        ImageView ivProductImage = view.findViewById(R.id.image);
+        TextView tvCategory = (TextView) view.findViewById(R.id.category);
+        TextView tvQuantity = (TextView) view.findViewById(R.id.quantity);
 
         String name = cursor.getString(cursor.getColumnIndexOrThrow(StockEntry.COLUMN_ITEM_NAME));
         String price = cursor.getString(cursor.getColumnIndexOrThrow(StockEntry.COLUMN_ITEM_PRICE));
         int category = cursor.getInt(cursor.getColumnIndexOrThrow(StockEntry.COLUMN_ITEM_CATEGORY));
-
-//        if (cursor.getColumnIndexOrThrow(StockEntry.COLUMN_ITEM_IMAGE) == 1) {
-//            byte[] bitmap = cursor.getBlob(cursor.getColumnIndex(StockEntry.COLUMN_ITEM_IMAGE));
-//            Bitmap imageBitmap = ImageCapture.getImage(bitmap);
-//            ivProductImage.setImageBitmap(imageBitmap);
-//        } else {
-//            ivProductImage.setImageResource(R.drawable.inventory);
-//        }
+        int quantity = cursor.getInt(cursor.getColumnIndexOrThrow(StockEntry.COLUMN_ITEM_QUANTITY));
 
         switch (category) {
             case StockEntry.CATEGORY_ADULT_FASHION:
@@ -83,6 +76,6 @@ public class StockCursorAdapter extends CursorAdapter {
 
         tvName.setText(name);
         tvPrice.setText(price);
-
+        tvQuantity.setText(String.valueOf(quantity));
     }
 }

@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -32,7 +33,6 @@ import com.example.chirag.stockcontrol.data.StockDbhelper;
 public class StockActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private StockCursorAdapter mStockCursorAdapter;
-    private StockDbhelper mStockDbHelper;
     public static final int STOCK_LOADER = 0;
 
     @Override
@@ -51,9 +51,6 @@ public class StockActivity extends AppCompatActivity implements LoaderManager.Lo
 
         final ListView stockListView = (ListView) findViewById(R.id.dialog_listview);
 
-//        View emptyView = findViewById(R.id.empty_view);
-
-
         mStockCursorAdapter = new StockCursorAdapter(this, null);
         stockListView.setAdapter(mStockCursorAdapter);
 
@@ -71,7 +68,7 @@ public class StockActivity extends AppCompatActivity implements LoaderManager.Lo
     }
 
     private void insertData() {
-        mStockDbHelper = new StockDbhelper(this);
+        StockDbhelper mStockDbHelper = new StockDbhelper(this);
         ContentValues values = new ContentValues();
 
 
