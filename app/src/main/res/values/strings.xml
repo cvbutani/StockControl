@@ -24,7 +24,7 @@
 
     <string name="cad">CAD $</string>
 
-    <string name="quantity_available">Quantity Available</string>
+    <string name="quantity_available">Quantity</string>
 
     <string name="date_received">Date Received</string>
 
@@ -38,7 +38,7 @@
 
     <string name="supplier_name">Supplier Name</string>
 
-    <string name="contact_number">Contact Number</string>
+    <string name="contact_number">Supplier Contact Number</string>
 
     <string name="supplier_email_id">Supplier Email Id</string>
 
