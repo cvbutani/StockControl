@@ -77,6 +77,7 @@ public class StockCursorAdapter extends CursorAdapter {
 
         if (updatedQuantity == 0) {
             tvQuantity.setTextColor(Color.RED);
+
         } else if (updatedQuantity <= 15 && updatedQuantity >=1) {
             tvQuantity.setTextColor(Color.parseColor("#FFBF00"));
         } else {

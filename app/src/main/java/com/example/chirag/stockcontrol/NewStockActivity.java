@@ -467,6 +467,14 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
             String supplierNumber = data.getString(supplierNumberColumnIndex);
             String supplierEmail = data.getString(supplierEmailIdColumnIndex);
 
+            if (quantity == 0) {
+                mPlaceOrderLayout.setVisibility(View.VISIBLE);
+            } else if (quantity <= 15 && quantity > 0) {
+                mPlaceOrderLayout.setVisibility(View.VISIBLE);
+            } else {
+                mPlaceOrderLayout.setVisibility(View.GONE);
+            }
+
             mNameEditText.setText(name);
             mImageView.setImageBitmap(img);
             mPriceEditText.setText(Integer.toString(price));
