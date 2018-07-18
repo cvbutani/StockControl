@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -37,244 +38,141 @@
                 android:textColor="#fff"
                 android:textStyle="bold" />
 
+            <LinearLayout
+                android:id="@+id/date_picker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_toRightOf="@+id/inventory_image"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_weight="1"
+                    android:text="Date"
+                    android:textAppearance="?android:textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/edit_item_date"
+                    style="@style/EditorFieldStyle"
+                    android:layout_weight="1"
+                    android:text="@string/pick_a_date" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/date_picker"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_toRightOf="@id/inventory_image"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Category"
+                    android:textAppearance="?android:textAppearanceMedium" />
+
+                <Spinner
+                    android:id="@+id/spinner_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:spinnerMode="dropdown"
+                    tools:ignore="RtlSymmetry" />
+            </LinearLayout>
+
         </RelativeLayout>
 
-        <!--Product Detail Layout-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/product_detail"
-                android:textAppearance="?android:textAppearanceLarge"
-                android:textColor="#00796B"
-                android:textStyle="bold" />
+                android:layout_height="wrap_content">
 
-            <!--Item Name-->
-            <LinearLayout
-                android:id="@+id/container_name"
-                style="@style/LinearLayoutItemDescription">
+                <EditText
+                    android:id="@+id/edit_item_name"
+                    style="@style/EditorFieldStyle"
+                    android:hint="Item Name"
+                    android:inputType="text" />
+            </android.support.design.widget.TextInputLayout>
 
-                <TextView
-                    style="@style/CategoryStyle"
-                    android:text="@string/item_name" />
-
-                <RelativeLayout style="@style/RelativeLayoutEditText">
-
-                    <EditText
-                        android:id="@+id/edit_item_name"
-                        style="@style/EditorFieldStyle"
-                        android:inputType="text" />
-
-                </RelativeLayout>
-            </LinearLayout>
-
-            <!--Item Price-->
-            <LinearLayout
-                android:id="@+id/container_price"
-                style="@style/LinearLayoutItemDescription">
-
-                <TextView
-                    style="@style/CategoryStyle"
-                    android:text="@string/price" />
-
-                <RelativeLayout style="@style/RelativeLayoutEditText">
-
-                    <TextView
-                        android:id="@+id/unit"
-                        style="@style/EditorUnitsStyle"
-                        android:text="@string/cad" />
-
-                    <EditText
-                        android:id="@+id/edit_item_price"
-                        style="@style/EditorFieldStyle"
-                        android:layout_toEndOf="@id/unit"
-                        android:layout_toRightOf="@id/unit"
-                        android:inputType="number" />
-
-                </RelativeLayout>
-            </LinearLayout>
-
-            <!--Item Quantity-->
-            <LinearLayout
-                android:id="@+id/container_quantity"
-                style="@style/LinearLayoutItemDescription">
-
-                <TextView
-                    style="@style/CategoryStyle"
-                    android:text="@string/quantity_available" />
-
-                <RelativeLayout style="@style/RelativeLayoutEditText">
-
-                    <EditText
-                        android:id="@+id/edit_item_quantity"
-                        style="@style/EditorFieldStyle"
-                        android:inputType="number" />
-
-                </RelativeLayout>
-            </LinearLayout>
-
-            <!--Date-->
-            <LinearLayout
-                android:id="@+id/container_date"
-                style="@style/LinearLayoutItemDescription">
-
-                <TextView
-                    style="@style/CategoryStyle"
-                    android:text="@string/date_received" />
-
-                <RelativeLayout style="@style/RelativeLayoutEditText">
-
-                    <TextView
-                        android:id="@+id/edit_item_date"
-                        style="@style/EditorFieldStyle"
-                        android:text="@string/pick_a_date" />
-
-                </RelativeLayout>
-            </LinearLayout>
-
-            <!--Category-->
-            <LinearLayout
-                android:id="@+id/container_category"
-                style="@style/LinearLayoutItemDescription">
-
-                <!-- Label -->
-                <TextView
-                    style="@style/CategoryStyle"
-                    android:text="@string/category" />
-
-                <!-- Input field -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:orientation="vertical">
-
-                    <!-- Gender drop-down spinner -->
-                    <Spinner
-                        android:id="@+id/spinner_category"
-                        android:layout_width="wrap_content"
-                        android:layout_height="48dp"
-                        android:paddingEnd="16dp"
-                        android:paddingRight="16dp"
-                        android:spinnerMode="dropdown" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Item Location -->
-            <LinearLayout
-                android:id="@+id/container_location"
-                style="@style/LinearLayoutItemDescription">
-
-                <!-- Label -->
-                <TextView
-                    style="@style/CategoryStyle"
-                    android:text="@string/item_location" />
-
-                <!-- Input fields -->
-                <RelativeLayout style="@style/RelativeLayoutEditText">
-
-                    <!-- Weight field -->
-                    <EditText
-                        android:id="@+id/edit_item_location"
-                        style="@style/EditorFieldStyle"
-                        android:inputType="text" />
-
-                </RelativeLayout>
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginTop="16dp"
-            android:background="#000" />
-
-        <!--Supplier Information-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/supplier"
-                android:textAppearance="?android:textAppearanceLarge"
-                android:textColor="#00796B"
-                android:textStyle="bold" />
+                android:layout_height="wrap_content">
 
-            <!-- Supplier Name -->
-            <LinearLayout
-                android:id="@+id/container_supplier"
-                style="@style/LinearLayoutItemDescription">
+                <EditText
+                    android:id="@+id/edit_item_price"
+                    style="@style/EditorFieldStyle"
+                    android:hint="CAD $ "
+                    android:inputType="number" />
+            </android.support.design.widget.TextInputLayout>
 
-                <!-- Label -->
-                <TextView
-                    style="@style/CategoryStyle"
-                    android:text="@string/supplier_name" />
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-                <!-- Input fields -->
-                <RelativeLayout style="@style/RelativeLayoutEditText">
+                <EditText
+                    android:id="@+id/edit_item_quantity"
+                    style="@style/EditorFieldStyle"
+                    android:hint="Quantity"
+                    android:inputType="text" />
+            </android.support.design.widget.TextInputLayout>
 
-                    <!-- Weight field -->
-                    <EditText
-                        android:id="@+id/edit_item_supplier"
-                        style="@style/EditorFieldStyle"
-                        android:inputType="text" />
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-                </RelativeLayout>
-            </LinearLayout>
+                <EditText
+                    android:id="@+id/edit_item_location"
+                    style="@style/EditorFieldStyle"
+                    android:hint="Item Location"
+                    android:inputType="text" />
+            </android.support.design.widget.TextInputLayout>
 
-            <!-- Supplier Contact Number-->
-            <LinearLayout
-                android:id="@+id/container_supplier_contact_number"
-                style="@style/LinearLayoutItemDescription">
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-                <!-- Label -->
-                <TextView
-                    style="@style/CategoryStyle"
-                    android:text="@string/contact_number" />
+                <EditText
+                    android:id="@+id/edit_item_supplier"
+                    style="@style/EditorFieldStyle"
+                    android:hint="Supplier Name"
+                    android:inputType="text" />
+            </android.support.design.widget.TextInputLayout>
 
-                <!-- Input fields -->
-                <RelativeLayout style="@style/RelativeLayoutEditText">
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-                    <!-- Weight field -->
-                    <EditText
-                        android:id="@+id/edit_item_supplier_contact_number"
-                        style="@style/EditorFieldStyle"
-                        android:inputType="number" />
+                <EditText
+                    android:id="@+id/edit_item_supplier_contact_number"
+                    style="@style/EditorFieldStyle"
+                    android:hint="Supplier Contact Number"
+                    android:inputType="number" />
+            </android.support.design.widget.TextInputLayout>
 
-                </RelativeLayout>
-            </LinearLayout>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <!-- Supplier Email Address -->
-            <LinearLayout
-                android:id="@+id/container_supplier_email_address"
-                style="@style/LinearLayoutItemDescription">
+                <EditText
+                    android:id="@+id/edit_item_supplier_email_id"
+                    style="@style/EditorFieldStyle"
+                    android:hint="Supplier Email Address"
+                    android:inputType="textEmailAddress" />
+            </android.support.design.widget.TextInputLayout>
 
-                <!-- Label -->
-                <TextView
-                    style="@style/CategoryStyle"
-                    android:text="@string/supplier_email_id" />
-
-                <!-- Input fields -->
-                <RelativeLayout style="@style/RelativeLayoutEditText">
-
-                    <!-- Email field -->
-                    <EditText
-                        android:id="@+id/edit_item_supplier_email_id"
-                        style="@style/EditorFieldStyle"
-                        android:inputType="textEmailAddress" />
-
-                </RelativeLayout>
-            </LinearLayout>
-
+            <!--Place Order-->
             <LinearLayout
                 android:id="@+id/place_order_layout"
                 android:layout_width="match_parent"
@@ -282,27 +180,32 @@
                 android:layout_marginTop="16dp"
                 android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/place_order_quantity"
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_weight="3"
-                    android:hint="@string/enter_quantity"
-                    android:inputType="number"
-                    android:textAppearance="?android:textAppearanceMedium"
-                    android:textColor="@color/colorAccent" />
+                    android:layout_weight="3">
+
+                    <EditText
+                        android:id="@+id/place_order_quantity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/enter_quantity"
+                        android:inputType="number"
+                        android:textAppearance="?android:textAppearanceMedium"
+                        android:textColor="@color/colorAccent" />
+                </android.support.design.widget.TextInputLayout>
+
 
                 <Button
                     android:id="@+id/place_order"
                     android:layout_width="100dp"
                     android:layout_height="40dp"
-                    android:layout_weight="1"
                     android:layout_margin="8dp"
-                    android:textAppearance="?android:textAppearanceMedium"
-                    android:textColor="#FFF"
+                    android:layout_weight="1"
                     android:background="@color/colorPrimary"
-                    android:text="@string/place_order" />
+                    android:text="@string/place_order"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:textColor="#FFF" />
 
             </LinearLayout>
 
@@ -327,8 +230,6 @@
                     android:text="@string/save_item" />
 
             </LinearLayout>
-
-
         </LinearLayout>
 
     </LinearLayout>
