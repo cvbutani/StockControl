@@ -1,4 +1,4 @@
-# News App
+# Stock Control
 
 
 #### Overview
@@ -19,14 +19,22 @@ The goal is to design and create the structure of an Inventory App which allows 
 - Toast
 - BaseColumns
 - Content Provider
+- FloatingActionButton
 
 ###### Gradle dependencies
 ```
 implementation 'com.android.support:design:27.1.1
 ```
 
+#### Features
+- Add new products
+- Edit exisiting products
+- Delete exisiting products
+- Send an email to supplier to order more products with one click
+- Consume quantity on homescreen
+
 #### UX DESIGN
 
-<img src="https://raw.githubusercontent.com/cvbutani/NewsApp/master/UXDesign/ux1.png" width="200"/> <img src="https://raw.githubusercontent.com/cvbutani/NewsApp/master/UXDesign/ux2.png" width="200"/> <img src="https://raw.githubusercontent.com/cvbutani/NewsApp/master/UXDesign/ux3.png" width="200"/>
+<img src="https://raw.githubusercontent.com/cvbutani/StockControl/master/UXDesign/ux1.png" width="200"/> <img src="https://raw.githubusercontent.com/cvbutani/StockControl/master/UXDesign/ux2.png" width="200"/> <img src="https://raw.githubusercontent.com/cvbutani/StockControl/master/UXDesign/ux3.png" width="200"/>
 
-<img src="https://raw.githubusercontent.com/cvbutani/NewsApp/master/UXDesign/ux4.png" width="200"/> <img src="https://raw.githubusercontent.com/cvbutani/NewsApp/master/UXDesign/ux5.png" width="200"/> <img src="https://raw.githubusercontent.com/cvbutani/NewsApp/master/UXDesign/ux6.png" width="200"/>
+<img src="https://raw.githubusercontent.com/cvbutani/StockControl/master/UXDesign/ux4.png" width="200"/> <img src="https://raw.githubusercontent.com/cvbutani/StockControl/master/UXDesign/ux5.png" width="200"/> <img src="https://raw.githubusercontent.com/cvbutani/StockControl/master/UXDesign/ux6.png" width="200"/>
