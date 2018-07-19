@@ -35,6 +35,6 @@ implementation 'com.android.support:design:27.1.1
 
 #### UX DESIGN
 
-<img src="https://raw.githubusercontent.com/cvbutani/StockControl/master/UXDesign/ux1.png" width="200"/> <img src="https://raw.githubusercontent.com/cvbutani/StockControl/master/UXDesign/ux2.png" width="200"/> <img src="https://raw.githubusercontent.com/cvbutani/StockControl/master/UXDesign/ux3.png" width="200"/>
+<img src="https://raw.githubusercontent.com/cvbutani/StockControl/master/UxDesign/ux1.png" width="200"/> <img src="https://raw.githubusercontent.com/cvbutani/StockControl/master/UxDesign/ux2.png" width="200"/> <img src="https://raw.githubusercontent.com/cvbutani/StockControl/master/UxDesign/ux3.png" width="200"/>
 
-<img src="https://raw.githubusercontent.com/cvbutani/StockControl/master/UXDesign/ux4.png" width="200"/> <img src="https://raw.githubusercontent.com/cvbutani/StockControl/master/UXDesign/ux5.png" width="200"/> <img src="https://raw.githubusercontent.com/cvbutani/StockControl/master/UXDesign/ux6.png" width="200"/>
+<img src="https://raw.githubusercontent.com/cvbutani/StockControl/master/UxDesign/ux4.png" width="200"/> <img src="https://raw.githubusercontent.com/cvbutani/StockControl/master/UxDesign/ux5.png" width="200"/> <img src="https://raw.githubusercontent.com/cvbutani/StockControl/master/UxDesign/ux6.png" width="200"/>
