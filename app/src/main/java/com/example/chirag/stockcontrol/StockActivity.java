@@ -12,6 +12,8 @@ import android.content.Loader;
 
 import android.database.Cursor;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.chirag.stockcontrol.data.ImageCapture;
 import com.example.chirag.stockcontrol.data.StockContract.StockEntry;
 import com.example.chirag.stockcontrol.data.StockDbhelper;
 
@@ -76,8 +79,9 @@ public class StockActivity extends AppCompatActivity implements LoaderManager.Lo
     private void insertData() {
         StockDbhelper mStockDbHelper = new StockDbhelper(this);
         ContentValues values = new ContentValues();
-
-
+        Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_box);
+        byte[] image = ImageCapture.getBytes(icon);
+        values.put(StockEntry.COLUMN_ITEM_IMAGE, image);
         values.put(StockEntry.COLUMN_ITEM_NAME, "iPad");
         values.put(StockEntry.COLUMN_ITEM_PRICE, 299);
         values.put(StockEntry.COLUMN_ITEM_QUANTITY, 20);
@@ -85,6 +89,8 @@ public class StockActivity extends AppCompatActivity implements LoaderManager.Lo
         values.put(StockEntry.COLUMN_ITEM_CATEGORY, StockEntry.CATEGORY_ELECTRONICS);
         values.put(StockEntry.COLUMN_ITEM_LOCATION, "L05A1");
         values.put(StockEntry.COLUMN_ITEM_SUPPLIER, "Apple inc.");
+        values.put(StockEntry.COLUMN_ITEM_SUPPLIER_NUMBER, "123456789");
+        values.put(StockEntry.COLUMN_ITEM_SUPPLIER_EMAIL, "apple@apple.com");
 
         getContentResolver().insert(StockEntry.CONTENT_URI, values);
     }
