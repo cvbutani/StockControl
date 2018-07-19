@@ -102,7 +102,7 @@
                 <EditText
                     android:id="@+id/edit_item_name"
                     style="@style/EditorFieldStyle"
-                    android:hint="Item Name"
+                    android:hint="@string/item_name"
                     android:inputType="text" />
             </android.support.design.widget.TextInputLayout>
 
@@ -113,7 +113,7 @@
                 <EditText
                     android:id="@+id/edit_item_price"
                     style="@style/EditorFieldStyle"
-                    android:hint="CAD $ "
+                    android:hint="@string/cad"
                     android:inputType="number" />
             </android.support.design.widget.TextInputLayout>
 
@@ -124,8 +124,8 @@
                 <EditText
                     android:id="@+id/edit_item_quantity"
                     style="@style/EditorFieldStyle"
-                    android:hint="Quantity"
-                    android:inputType="text" />
+                    android:hint="@string/quantity_available"
+                    android:inputType="number" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -135,7 +135,7 @@
                 <EditText
                     android:id="@+id/edit_item_location"
                     style="@style/EditorFieldStyle"
-                    android:hint="Item Location"
+                    android:hint="@string/item_location"
                     android:inputType="text" />
             </android.support.design.widget.TextInputLayout>
 
@@ -146,7 +146,7 @@
                 <EditText
                     android:id="@+id/edit_item_supplier"
                     style="@style/EditorFieldStyle"
-                    android:hint="Supplier Name"
+                    android:hint="@string/supplier_name"
                     android:inputType="text" />
             </android.support.design.widget.TextInputLayout>
 
@@ -157,7 +157,7 @@
                 <EditText
                     android:id="@+id/edit_item_supplier_contact_number"
                     style="@style/EditorFieldStyle"
-                    android:hint="Supplier Contact Number"
+                    android:hint="@string/contact_number"
                     android:inputType="number" />
             </android.support.design.widget.TextInputLayout>
 
@@ -168,7 +168,7 @@
                 <EditText
                     android:id="@+id/edit_item_supplier_email_id"
                     style="@style/EditorFieldStyle"
-                    android:hint="Supplier Email Address"
+                    android:hint="@string/supplier_email_id"
                     android:inputType="textEmailAddress" />
             </android.support.design.widget.TextInputLayout>
 
