@@ -57,7 +57,7 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
 
     private DatePickerDialog.OnDateSetListener mDateSetListener;
 
-    private RelativeLayout rlCamera;
+    private TextView cameraTextView;
     private LinearLayout mPlaceOrderLayout;
 
     private TextView tvDatePicker;
@@ -116,9 +116,17 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
         }
 
 
-        rlCamera.setOnClickListener(new View.OnClickListener() {
+        mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+            }
+        });
+
+        cameraTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
             }
@@ -195,7 +203,7 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
     @SuppressLint("ClickableViewAccessibility")
     private void findAllViewsAndAttachListener() {
         tvDatePicker = findViewById(R.id.edit_item_date);
-        rlCamera = findViewById(R.id.camera);
+        cameraTextView = findViewById(R.id.edit_button);
         mNameEditText = findViewById(R.id.edit_item_name);
         mPriceEditText = findViewById(R.id.edit_item_price);
         mQuantityEditText = findViewById(R.id.edit_item_quantity);
@@ -212,7 +220,7 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
         mOrderQuantity = findViewById(R.id.place_order_quantity);
 
         tvDatePicker.setOnTouchListener(mTouchListener);
-        rlCamera.setOnTouchListener(mTouchListener);
+        cameraTextView.setOnTouchListener(mTouchListener);
         mNameEditText.setOnTouchListener(mTouchListener);
         mPriceEditText.setOnTouchListener(mTouchListener);
         mQuantityEditText.setOnTouchListener(mTouchListener);
