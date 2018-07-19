@@ -26,6 +26,7 @@
                 android:src="@drawable/ic_box" />
 
             <TextView
+                android:id="@+id/edit_button"
                 android:layout_width="128dp"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@id/inventory_image"
