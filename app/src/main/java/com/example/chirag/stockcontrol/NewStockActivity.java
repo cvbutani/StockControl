@@ -178,13 +178,16 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
                         "Can you please send us " + quantityOrder + " ?\n" +
                         "Please provide us tracking number asap.\n" +
                         "Thank you";
-
-                Intent intent = new Intent(Intent.ACTION_SENDTO);
-                intent.setData(Uri.parse("mailto:" + supplierEmail));
-                intent.putExtra(Intent.EXTRA_SUBJECT, "Place Order for " + name);
-                intent.putExtra(Intent.EXTRA_TEXT, messageText);
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivity(intent);
+                if (!TextUtils.isEmpty(supplierEmail) && !TextUtils.isEmpty(quantityOrder)) {
+                    Intent intent = new Intent(Intent.ACTION_SENDTO);
+                    intent.setData(Uri.parse("mailto:" + supplierEmail));
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "Place Order for " + name);
+                    intent.putExtra(Intent.EXTRA_TEXT, messageText);
+                    if (intent.resolveActivity(getPackageManager()) != null) {
+                        startActivity(intent);
+                    }
+                } else {
+                    Toast.makeText(NewStockActivity.this, "Supplier not added for this item", Toast.LENGTH_SHORT).show();
                 }
             }
         });
