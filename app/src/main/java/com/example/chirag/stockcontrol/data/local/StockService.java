@@ -2,9 +2,14 @@ package com.example.chirag.stockcontrol.data.local;
 
 import android.support.annotation.NonNull;
 
+import com.example.chirag.stockcontrol.data.OnTaskCompletion;
+import com.example.chirag.stockcontrol.data.StockDataSource;
+import com.example.chirag.stockcontrol.data.model.Stock;
 import com.example.chirag.stockcontrol.util.AppExecutors;
 
-public class StockService {
+import java.util.List;
+
+public class StockService implements StockDataSource {
     private static StockService INSTANCE;
 
     private StockDao mStockDao;
@@ -27,5 +32,24 @@ public class StockService {
         return INSTANCE;
     }
 
-
+    @Override
+    public void getAllStockItems(final OnTaskCompletion.OnGetStockItems callback) {
+        Runnable getStockItemsRunnable = new Runnable() {
+            @Override
+            public void run() {
+                final List<Stock> stocks = mStockDao.getStocks();
+                mAppExecutors.getMainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (stocks.isEmpty()) {
+                            callback.stockItemsFailure("NOTHING TO SHOW IN DATABASE");
+                        } else {
+                            callback.stockItemsSuccess(stocks);
+                        }
+                    }
+                });
+            }
+        };
+        mAppExecutors.getDiskIO().execute(getStockItemsRunnable);
+    }
 }
