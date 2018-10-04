@@ -21,7 +21,7 @@ public class StockService implements StockDataSource {
         mStockDao = stockDao;
     }
 
-    private static StockService getInstance(@NonNull AppExecutors appExecutors, @NonNull StockDao stockDao) {
+    public static StockService getInstance(@NonNull AppExecutors appExecutors, @NonNull StockDao stockDao) {
         if (INSTANCE == null) {
             synchronized (StockService.class) {
                 if (INSTANCE == null) {
@@ -51,5 +51,21 @@ public class StockService implements StockDataSource {
             }
         };
         mAppExecutors.getDiskIO().execute(getStockItemsRunnable);
+    }
+
+    @Override
+    public void insertStockItem(final Stock item, final OnTaskCompletion.OnInsertStockItem callback) {
+        Runnable insertStockRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (item != null) {
+                    mStockDao.inserStock(item);
+                    callback.insertStockSuccess();
+                } else {
+                    callback.insertStockFailure("Failure");
+                }
+            }
+        };
+        mAppExecutors.getDiskIO().execute(insertStockRunnable);
     }
 }

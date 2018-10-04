@@ -27,6 +27,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import android.text.TextUtils;
 
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -45,18 +46,21 @@ import android.widget.Toast;
 
 import com.example.chirag.stockcontrol.data.ImageCapture;
 import com.example.chirag.stockcontrol.data.StockContract.StockEntry;
+import com.example.chirag.stockcontrol.data.model.Stock;
 
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * StockControl
  * Created by Chirag on 06/07/18.
  */
 
-public class NewStockActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class NewStockActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, NewStockContract.View {
 
     private DatePickerDialog.OnDateSetListener mDateSetListener;
 
+    private String TAG = "NEW STOCK ACTIVITY --- ";
     private TextView cameraTextView;
     private LinearLayout mPlaceOrderLayout;
 
@@ -77,7 +81,7 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
     private Button mDeleteButton;
     private Button mPlaceOrder;
     private Button mSaveItem;
-
+    private Stock stock;
 
     public static final int STOCK_LOADER = 1;
     public static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -86,6 +90,7 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
     private int mCategory = 0;
     private Uri mCurrentSelectedStockItem;
 
+    private NewStockPresenter mStockPresenter;
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -100,6 +105,9 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
         setContentView(R.layout.activity_new_item);
 
         findAllViewsAndAttachListener();
+
+        mStockPresenter = new NewStockPresenter(this);
+        mStockPresenter.attachView(this, stock);
 
         Intent intent = getIntent();
         mCurrentSelectedStockItem = intent.getData();
@@ -197,6 +205,8 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
             public void onClick(View v) {
                 //  Save stock item to database
                 saveStockItem();
+//                insertStockItem();
+
                 //  Exit activity
                 finish();
             }
@@ -612,5 +622,60 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
             }
         }
         finish();
+    }
+
+    @Override
+    public void getAllStockItems(List<Stock> stockItem) {
+        Log.i("STOCK ITEM - ", stockItem.size() + "");
+        if (stockItem != null) {
+            Log.i("STOCK ITEM - ", stockItem.size() + "");
+            for (int i=0; i<stockItem.size(); i++) {
+                Log.i("FOUND SOMETHING: ", stockItem.get(i).getName());
+            }
+        }
+    }
+
+    @Override
+    public void insertStocks() {
+        //  Read from input fields
+        //  Use trim to eliminate leading or trailing white space
+        double price = 0;
+        int quantity = 0;
+        String name = mNameEditText.getText().toString().trim();
+        String priceString = mPriceEditText.getText().toString().trim();
+        String quantityString = mQuantityEditText.getText().toString().trim();
+        String date = tvDatePicker.getText().toString().trim();
+        String location = mLocationEditText.getText().toString().trim();
+        String supplier = mSupplierEditText.getText().toString().trim();
+        String supplierContactNumber = mSupplierContactNumberEditText.getText().toString().trim();
+        String supplierEmailId = mSupplerEmailId.getText().toString().trim();
+
+        Bitmap bitmapImage = ((BitmapDrawable) mImageView.getDrawable()).getBitmap();
+        byte[] mByteImage = ImageCapture.getBytes(bitmapImage);
+
+        //  Check if this is supposed to be a new stock item
+        //  and check if all the fields in the editor are blank.
+        if (mCurrentSelectedStockItem == null &&
+                TextUtils.isEmpty(name) && TextUtils.isEmpty(priceString) &&
+                TextUtils.isEmpty(quantityString) && TextUtils.isEmpty(date) &&
+                TextUtils.isEmpty(location) && TextUtils.isEmpty(supplier) &&
+                TextUtils.isEmpty(supplierContactNumber) && TextUtils.isEmpty(supplierEmailId)) {
+            //  Since no fields were modified, we can return early without creating a new Stock.
+            //  No need to create ContentValues and no need to do any ContentProvider operations.
+            return;
+        }
+
+        //  If price is not provided by the user, don't try to parse the string into an
+        //  integer value. Use 0 by default.
+        if (!TextUtils.isEmpty(priceString)) {
+            price = Double.parseDouble(priceString);
+        }
+
+        //  If quantity is not provided by the user, don't try to parse the string into an
+        //  integer value. Use 0 by default.
+        if (!TextUtils.isEmpty(quantityString)) {
+            quantity = Integer.parseInt(quantityString);
+        }
+        stock = new Stock(mByteImage, name,price,quantity,date,mCategory,location,supplier,supplierContactNumber,supplierEmailId);
     }
 }

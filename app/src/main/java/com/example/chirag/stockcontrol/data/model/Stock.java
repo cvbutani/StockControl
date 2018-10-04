@@ -2,8 +2,10 @@ package com.example.chirag.stockcontrol.data.model;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.UUID;
 
@@ -12,113 +14,171 @@ public class Stock {
 
     @PrimaryKey(autoGenerate = true)
     @NonNull
-    @ColumnInfo(name = "_ID", typeAffinity = ColumnInfo.TEXT)
-    private final String mId;
+    @ColumnInfo(name = "_ID")
+    private Integer id;
 
-    @ColumnInfo(name = "image", typeAffinity = ColumnInfo.BLOB)
-    private byte[] mImage;
-
-    @NonNull
-    @ColumnInfo(name = "name", typeAffinity = ColumnInfo.TEXT)
-    private final String mName;
+    @Nullable
+    @ColumnInfo(name = "image")
+    private byte[] image;
 
     @NonNull
-    @ColumnInfo(name = "price", typeAffinity = ColumnInfo.INTEGER)
-    private final int mPrice;
-
-    @ColumnInfo(name = "quality", typeAffinity = ColumnInfo.INTEGER)
-    private final int mQuality;
-
-    @ColumnInfo(name = "date", typeAffinity = ColumnInfo.TEXT)
-    private final String mDate;
+    @ColumnInfo(name = "name")
+    private String name;
 
     @NonNull
-    @ColumnInfo(name = "category", typeAffinity = ColumnInfo.INTEGER)
-    private final int mCategory;
+    @ColumnInfo(name = "price")
+    private Double price;
 
-    @ColumnInfo(name = "location", typeAffinity = ColumnInfo.TEXT)
-    private final String mLocation;
+    @Nullable
+    @ColumnInfo(name = "quantity")
+    private Integer quantity;
 
-    @ColumnInfo(name = "supplier_name", typeAffinity = ColumnInfo.TEXT)
-    private final String mSupplierName;
+    @Nullable
+    @ColumnInfo(name = "date")
+    private String date;
 
-    @ColumnInfo(name = "supplier_contact_number", typeAffinity = ColumnInfo.TEXT)
-    private final String mSupplierContactNumber;
+    @NonNull
+    @ColumnInfo(name = "category")
+    private Integer category;
 
-    @ColumnInfo(name = "suppleir_email_id", typeAffinity = ColumnInfo.TEXT)
-    private final String mSupplierEmailId;
+    @Nullable
+    @ColumnInfo(name = "location")
+    private String location;
 
-    public Stock(byte[] mImage, @NonNull String mName, @NonNull int mPrice, int mQuality, String mDate, @NonNull int mCategory, String mLocation, String mSupplierName, String mSupplierContactNumber, String mSupplierEmailId) {
-        this(UUID.randomUUID().toString(), mImage, mName, mPrice, mQuality, mDate, mCategory, mLocation, mSupplierName, mSupplierContactNumber, mSupplierEmailId);
-    }
+    @Nullable
+    @ColumnInfo(name = "supplier_name")
+    private String supplierName;
 
-//    public Task(@NonNull String id, byte[] mImage, @NonNull String mName, @NonNull int mPrice, int mQuality, String mDate, @NonNull int mCategory, String mLocation, String mSupplierName, String mSupplierContactNumber, String mSupplierEmailId) {
+    @Nullable
+    @ColumnInfo(name = "supplier_contact_number")
+    private String supplierContactNumber;
+
+    @Nullable
+    @ColumnInfo(name = "suppleir_email_id")
+    private  String supplierEmailId;
+
+    //    public Task(@NonNull String id, byte[] mImage, @NonNull String mName, @NonNull int mPrice, int mQuality, String mDate, @NonNull int mCategory, String mLocation, String mSupplierName, String mSupplierContactNumber, String mSupplierEmailId) {
 //        this(id, mImage, mName, mPrice, mQuality, mDate, mCategory, mLocation, mSupplierName, mSupplierContactNumber, mSupplierEmailId);
 //    }
 
-    public Stock(@NonNull String mId, byte[] mImage, @NonNull String mName, @NonNull int mPrice, int mQuality, String mDate, @NonNull int mCategory, String mLocation, String mSupplierName, String mSupplierContactNumber, String mSupplierEmailId) {
-        this.mId = mId;
-        this.mImage = mImage;
-        this.mName = mName;
-        this.mPrice = mPrice;
-        this.mQuality = mQuality;
-        this.mDate = mDate;
-        this.mCategory = mCategory;
-        this.mLocation = mLocation;
-        this.mSupplierName = mSupplierName;
-        this.mSupplierContactNumber = mSupplierContactNumber;
-        this.mSupplierEmailId = mSupplierEmailId;
+    public Stock() {
+    }
+
+    @Ignore
+    public Stock(byte[] mImage, @NonNull String mName, @NonNull Double mPrice, Integer mQuality, String mDate, @NonNull Integer mCategory, String mLocation, String mSupplierName, String mSupplierContactNumber, String mSupplierEmailId) {
+        this.image = mImage;
+        this.name = mName;
+        this.price = mPrice;
+        this.quantity = mQuality;
+        this.date = mDate;
+        this.category = mCategory;
+        this.location = mLocation;
+        this.supplierName = mSupplierName;
+        this.supplierContactNumber = mSupplierContactNumber;
+        this.supplierEmailId = mSupplierEmailId;
+    }
+
+//    @Ignore
+//    public Stock(byte[] mImage, @NonNull String mName, @NonNull double mPrice, int mQuality, String mDate, @NonNull int mCategory, String mLocation, String mSupplierName, String mSupplierContactNumber, String mSupplierEmailId) {
+//        this(mImage, mName, mPrice, mQuality, mDate, mCategory, mLocation, mSupplierName, mSupplierContactNumber, mSupplierEmailId);
+//    }
+
+    @NonNull
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(@NonNull Integer id) {
+        this.id = id;
+    }
+
+    @Nullable
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(@Nullable byte[] image) {
+        this.image = image;
     }
 
     @NonNull
-    public String getmId() {
-        return mId;
+    public String getName() {
+        return name;
     }
 
-    public byte[] getmImage() {
-        return mImage;
-    }
-
-    public void setmImage(byte[] mImage) {
-        this.mImage = mImage;
+    public void setName(@NonNull String name) {
+        this.name = name;
     }
 
     @NonNull
-    public String getmName() {
-        return mName;
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(@NonNull Double price) {
+        this.price = price;
+    }
+
+    @Nullable
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(@Nullable Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    @Nullable
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(@Nullable String date) {
+        this.date = date;
     }
 
     @NonNull
-    public int getmPrice() {
-        return mPrice;
+    public Integer getCategory() {
+        return category;
     }
 
-    public int getmQuality() {
-        return mQuality;
+    public void setCategory(@NonNull Integer category) {
+        this.category = category;
     }
 
-    public String getmDate() {
-        return mDate;
+    @Nullable
+    public String getLocation() {
+        return location;
     }
 
-    @NonNull
-    public int getmCategory() {
-        return mCategory;
+    public void setLocation(@Nullable String location) {
+        this.location = location;
     }
 
-    public String getmLocation() {
-        return mLocation;
+    @Nullable
+    public String getSupplierName() {
+        return supplierName;
     }
 
-    public String getmSupplierName() {
-        return mSupplierName;
+    public void setSupplierName(@Nullable String supplierName) {
+        this.supplierName = supplierName;
     }
 
-    public String getmSupplierContactNumber() {
-        return mSupplierContactNumber;
+    @Nullable
+    public String getSupplierContactNumber() {
+        return supplierContactNumber;
     }
 
-    public String getmSupplierEmailId() {
-        return mSupplierEmailId;
+    public void setSupplierContactNumber(@Nullable String supplierContactNumber) {
+        this.supplierContactNumber = supplierContactNumber;
+    }
+
+    @Nullable
+    public String getSupplierEmailId() {
+        return supplierEmailId;
+    }
+
+    public void setSupplierEmailId(@Nullable String supplierEmailId) {
+        this.supplierEmailId = supplierEmailId;
     }
 }

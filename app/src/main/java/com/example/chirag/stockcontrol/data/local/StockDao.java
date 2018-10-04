@@ -21,7 +21,7 @@ public interface StockDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void inserStock(Stock stock);
 
-    @Query("DELETE * FROM tasks WHERE _ID = :taskId")
+    @Query("DELETE FROM tasks WHERE _ID = :taskId")
     void deleteTaskById(String taskId);
 }
 
