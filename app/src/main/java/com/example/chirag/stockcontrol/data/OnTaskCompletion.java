@@ -11,8 +11,8 @@ public interface OnTaskCompletion {
         void stockItemsFailure (String errorMessage);
     }
 
-    interface OnInsertStockItem {
-        void insertStockSuccess ();
-        void insertStockFailure (String errorMessage);
+    interface OnGetStock {
+        void getStockSuccess (Stock stock);
+        void getStockFailure (String errorMessage);
     }
 }

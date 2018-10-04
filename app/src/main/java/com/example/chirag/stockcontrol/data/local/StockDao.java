@@ -16,7 +16,7 @@ public interface StockDao {
     List<Stock> getStocks();
 
     @Query("SELECT * FROM Tasks WHERE _ID = :taskId")
-    Stock getStockById(String taskId);
+    Stock getStockById(int taskId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void inserStock(Stock stock);

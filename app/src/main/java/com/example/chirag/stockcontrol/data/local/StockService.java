@@ -1,6 +1,7 @@
 package com.example.chirag.stockcontrol.data.local;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.example.chirag.stockcontrol.data.OnTaskCompletion;
 import com.example.chirag.stockcontrol.data.StockDataSource;
@@ -54,16 +55,33 @@ public class StockService implements StockDataSource {
     }
 
     @Override
-    public void insertStockItem(final Stock item, final OnTaskCompletion.OnInsertStockItem callback) {
+    public void getStockItem(final int stockId, final OnTaskCompletion.OnGetStock callback) {
+        Runnable getStockRunnable = new Runnable() {
+            @Override
+            public void run() {
+                final Stock stock = mStockDao.getStockById(stockId);
+                mAppExecutors.getMainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (stock == null) {
+                            callback.getStockFailure("Something went wrong");
+                        } else {
+                            callback.getStockSuccess(stock);
+                        }
+                    }
+                });
+            }
+        };
+        mAppExecutors.getDiskIO().execute(getStockRunnable);
+    }
+
+
+    @Override
+    public void insertStockItem(final Stock item) {
         Runnable insertStockRunnable = new Runnable() {
             @Override
             public void run() {
-                if (item != null) {
-                    mStockDao.inserStock(item);
-                    callback.insertStockSuccess();
-                } else {
-                    callback.insertStockFailure("Failure");
-                }
+                mStockDao.inserStock(item);
             }
         };
         mAppExecutors.getDiskIO().execute(insertStockRunnable);

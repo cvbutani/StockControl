@@ -20,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -62,6 +63,7 @@ public class StockActivity extends AppCompatActivity implements LoaderManager.Lo
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(StockActivity.this, NewStockActivity.class);
                 Uri currentItemUri = ContentUris.withAppendedId(StockEntry.CONTENT_URI, id);
+                intent.putExtra("POSITION", id);
                 intent.setData(currentItemUri);
                 startActivity(intent);
             }

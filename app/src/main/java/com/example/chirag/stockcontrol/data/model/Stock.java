@@ -57,27 +57,18 @@ public class Stock {
     @ColumnInfo(name = "suppleir_email_id")
     private  String supplierEmailId;
 
-    //    public Task(@NonNull String id, byte[] mImage, @NonNull String mName, @NonNull int mPrice, int mQuality, String mDate, @NonNull int mCategory, String mLocation, String mSupplierName, String mSupplierContactNumber, String mSupplierEmailId) {
-//        this(id, mImage, mName, mPrice, mQuality, mDate, mCategory, mLocation, mSupplierName, mSupplierContactNumber, mSupplierEmailId);
-//    }
-
-    public Stock() {
+    public Stock(byte[] image, @NonNull String name, @NonNull Double price, Integer quantity, String date, @NonNull Integer category, String location, String supplierName, String supplierContactNumber, String supplierEmailId) {
+        this.image = image;
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+        this.date = date;
+        this.category = category;
+        this.location = location;
+        this.supplierName = supplierName;
+        this.supplierContactNumber = supplierContactNumber;
+        this.supplierEmailId = supplierEmailId;
     }
-
-    @Ignore
-    public Stock(byte[] mImage, @NonNull String mName, @NonNull Double mPrice, Integer mQuality, String mDate, @NonNull Integer mCategory, String mLocation, String mSupplierName, String mSupplierContactNumber, String mSupplierEmailId) {
-        this.image = mImage;
-        this.name = mName;
-        this.price = mPrice;
-        this.quantity = mQuality;
-        this.date = mDate;
-        this.category = mCategory;
-        this.location = mLocation;
-        this.supplierName = mSupplierName;
-        this.supplierContactNumber = mSupplierContactNumber;
-        this.supplierEmailId = mSupplierEmailId;
-    }
-
 //    @Ignore
 //    public Stock(byte[] mImage, @NonNull String mName, @NonNull double mPrice, int mQuality, String mDate, @NonNull int mCategory, String mLocation, String mSupplierName, String mSupplierContactNumber, String mSupplierEmailId) {
 //        this(mImage, mName, mPrice, mQuality, mDate, mCategory, mLocation, mSupplierName, mSupplierContactNumber, mSupplierEmailId);

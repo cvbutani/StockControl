@@ -82,6 +82,7 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
     private Button mPlaceOrder;
     private Button mSaveItem;
     private Stock stock;
+    private int position;
 
     public static final int STOCK_LOADER = 1;
     public static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -107,10 +108,11 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
         findAllViewsAndAttachListener();
 
         mStockPresenter = new NewStockPresenter(this);
-        mStockPresenter.attachView(this, stock);
+        mStockPresenter.attachView(this);
 
         Intent intent = getIntent();
         mCurrentSelectedStockItem = intent.getData();
+        position = Integer.valueOf(intent.getStringExtra("POSITION"));
 
         if (mCurrentSelectedStockItem != null) {
             mDeleteButton.setVisibility(View.VISIBLE);
@@ -205,7 +207,7 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
             public void onClick(View v) {
                 //  Save stock item to database
                 saveStockItem();
-//                insertStockItem();
+                insertStocks();
 
                 //  Exit activity
                 finish();
@@ -630,9 +632,14 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
         if (stockItem != null) {
             Log.i("STOCK ITEM - ", stockItem.size() + "");
             for (int i=0; i<stockItem.size(); i++) {
-                Log.i("FOUND SOMETHING: ", stockItem.get(i).getName());
+                Log.i("FOUND SOMETHING: ", stockItem.get(i).getId().toString());
             }
         }
+    }
+
+    @Override
+    public void getStock(int stockId, Stock stock) {
+
     }
 
     @Override
@@ -677,5 +684,6 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
             quantity = Integer.parseInt(quantityString);
         }
         stock = new Stock(mByteImage, name,price,quantity,date,mCategory,location,supplier,supplierContactNumber,supplierEmailId);
+        mStockPresenter.insertStock(stock);
     }
 }

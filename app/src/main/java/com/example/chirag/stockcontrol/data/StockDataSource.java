@@ -6,6 +6,8 @@ public interface StockDataSource {
 
     void getAllStockItems(OnTaskCompletion.OnGetStockItems callback);
 
-    void insertStockItem(Stock stock, OnTaskCompletion.OnInsertStockItem callback);
+    void getStockItem(int stockId, OnTaskCompletion.OnGetStock callback);
+
+    void insertStockItem(Stock stock);
 
 }
