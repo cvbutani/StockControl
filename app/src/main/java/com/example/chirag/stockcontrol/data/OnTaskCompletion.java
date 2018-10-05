@@ -15,4 +15,8 @@ public interface OnTaskCompletion {
         void getStockSuccess (Stock stock);
         void getStockFailure (String errorMessage);
     }
+
+    interface OnDeleteStockItem {
+        void onDeleteStockSuccess(int response);
+    }
 }

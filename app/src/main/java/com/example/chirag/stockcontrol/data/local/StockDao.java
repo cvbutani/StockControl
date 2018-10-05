@@ -22,7 +22,7 @@ public interface StockDao {
     void inserStock(Stock stock);
 
     @Query("DELETE FROM tasks WHERE _ID = :taskId")
-    void deleteTaskById(String taskId);
+    int deleteTaskById(int taskId);
 }
 
 

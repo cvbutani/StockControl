@@ -15,7 +15,7 @@ public class NewStockPresenter implements NewStockContract.Presenter {
     private NewStockContract.View mCallback;
 
     private StockService mStockService;
-
+    int value;
     NewStockPresenter(Context context) {
         mStockService = StockService.getInstance(new AppExecutors(), StockDatabase.getInstance(context).stockDao());
     }
@@ -53,6 +53,18 @@ public class NewStockPresenter implements NewStockContract.Presenter {
     @Override
     public void insertStock(Stock item) {
         mStockService.insertStockItem(item);
+    }
+
+    @Override
+    public int deleteStockData(int stockId) {
+
+       mStockService.deleteStockItemData(stockId, new OnTaskCompletion.OnDeleteStockItem() {
+           @Override
+           public void onDeleteStockSuccess(int response) {
+               value = response;
+           }
+       });
+       return value;
     }
 
     @Override

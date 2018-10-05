@@ -23,6 +23,8 @@ public interface NewStockContract {
 
         void insertStock(Stock item);
 
+        int deleteStockData(int stockId);
+
         void attachView(NewStockContract.View view, int position);
     }
 }

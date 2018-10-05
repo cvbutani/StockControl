@@ -10,4 +10,6 @@ public interface StockDataSource {
 
     void insertStockItem(Stock stock);
 
+    void deleteStockItemData(int stockId, OnTaskCompletion.OnDeleteStockItem callback);
+
 }
