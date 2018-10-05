@@ -40,7 +40,7 @@ public class NewStockPresenter implements NewStockContract.Presenter {
         mStockService.getStockItem(stockId, new OnTaskCompletion.OnGetStock() {
             @Override
             public void getStockSuccess(Stock stock) {
-                mCallback.getStock(stockId, stock);
+                mCallback.getStock(stock);
             }
 
             @Override
@@ -56,8 +56,9 @@ public class NewStockPresenter implements NewStockContract.Presenter {
     }
 
     @Override
-    public void attachView(NewStockContract.View view) {
+    public void attachView(NewStockContract.View view, int position) {
         mCallback = view;
         getAllStockitems();
+        getStockData(position);
     }
 }

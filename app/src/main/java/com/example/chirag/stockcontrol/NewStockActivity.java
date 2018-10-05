@@ -107,12 +107,15 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
 
         findAllViewsAndAttachListener();
 
-        mStockPresenter = new NewStockPresenter(this);
-        mStockPresenter.attachView(this);
+
 
         Intent intent = getIntent();
         mCurrentSelectedStockItem = intent.getData();
-        position = Integer.valueOf(intent.getStringExtra("POSITION"));
+        position = (int) intent.getExtras().getLong("POSITION");
+
+
+        mStockPresenter = new NewStockPresenter(this);
+        mStockPresenter.attachView(this, position);
 
         if (mCurrentSelectedStockItem != null) {
             mDeleteButton.setVisibility(View.VISIBLE);
@@ -638,8 +641,8 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
     }
 
     @Override
-    public void getStock(int stockId, Stock stock) {
-
+    public void getStock(Stock stock) {
+        Log.i("STOCK DATA - - ", stock.getName());
     }
 
     @Override

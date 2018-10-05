@@ -9,7 +9,7 @@ public interface NewStockContract {
     interface View {
         void getAllStockItems(List<Stock> stockItem);
 
-        void getStock(int stockId, Stock stock);
+        void getStock(Stock stock);
 
         void insertStocks();
 
@@ -23,6 +23,6 @@ public interface NewStockContract {
 
         void insertStock(Stock item);
 
-        void attachView(NewStockContract.View view);
+        void attachView(NewStockContract.View view, int position);
     }
 }
