@@ -1,17 +1,12 @@
-package com.example.chirag.stockcontrol;
+package com.example.chirag.stockcontrol.newstock;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 
-import android.app.LoaderManager;
-import android.content.ContentValues;
-import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 
-import android.content.Loader;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 
@@ -39,13 +34,12 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.chirag.stockcontrol.R;
 import com.example.chirag.stockcontrol.data.ImageCapture;
-import com.example.chirag.stockcontrol.data.StockContract.StockEntry;
 import com.example.chirag.stockcontrol.data.model.Stock;
 
 import java.util.Calendar;
@@ -84,12 +78,10 @@ public class NewStockActivity extends AppCompatActivity implements NewStockContr
     private Stock stock;
     private int position;
 
-    public static final int STOCK_LOADER = 1;
     public static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private boolean mStockHasChanged = false;
     private int mCategory = 0;
-    private Uri mCurrentSelectedStockItem;
 
     private NewStockPresenter mStockPresenter;
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
@@ -108,9 +100,9 @@ public class NewStockActivity extends AppCompatActivity implements NewStockContr
         findAllViewsAndAttachListener();
 
         Intent intent = getIntent();
-        mCurrentSelectedStockItem = intent.getData();
-        position = (int) intent.getExtras().getLong("POSITION");
-
+        if (intent.hasExtra("POSITION")) {
+            position = (int) intent.getExtras().getLong("POSITION");
+        }
 
         mStockPresenter = new NewStockPresenter(this);
         mStockPresenter.attachView(this, position);
@@ -291,62 +283,7 @@ public class NewStockActivity extends AppCompatActivity implements NewStockContr
     /**
      * Get User input from editor and save stock item in database.
      */
-//    private void saveStockItem() {
-//        //  Read from input fields
-//        //  Use trim to eliminate leading or trailing white space
-//        double price = 0;
-//        int quantity = 0;
-//        String name = mNameEditText.getText().toString().trim();
-//        String priceString = mPriceEditText.getText().toString().trim();
-//        String quantityString = mQuantityEditText.getText().toString().trim();
-//        String date = tvDatePicker.getText().toString().trim();
-//        String location = mLocationEditText.getText().toString().trim();
-//        String supplier = mSupplierEditText.getText().toString().trim();
-//        String supplierContactNumber = mSupplierContactNumberEditText.getText().toString().trim();
-//        String supplierEmailId = mSupplerEmailId.getText().toString().trim();
-//
-//        Bitmap bitmapImage = ((BitmapDrawable) mImageView.getDrawable()).getBitmap();
-//        byte[] mByteImage = ImageCapture.getBytes(bitmapImage);
-//
-//        //  Check if this is supposed to be a new stock item
-//        //  and check if all the fields in the editor are blank.
-//        if (mCurrentSelectedStockItem == null &&
-//                TextUtils.isEmpty(name) && TextUtils.isEmpty(priceString) &&
-//                TextUtils.isEmpty(quantityString) && TextUtils.isEmpty(date) &&
-//                TextUtils.isEmpty(location) && TextUtils.isEmpty(supplier) &&
-//                TextUtils.isEmpty(supplierContactNumber) && TextUtils.isEmpty(supplierEmailId)) {
-//            //  Since no fields were modified, we can return early without creating a new Stock.
-//            //  No need to create ContentValues and no need to do any ContentProvider operations.
-//            return;
-//        }
-//
-//        //  If price is not provided by the user, don't try to parse the string into an
-//        //  integer value. Use 0 by default.
-//        if (!TextUtils.isEmpty(priceString)) {
-//            price = Integer.parseInt(priceString);
-//        }
-//
-//        //  If quantity is not provided by the user, don't try to parse the string into an
-//        //  integer value. Use 0 by default.
-//        if (!TextUtils.isEmpty(quantityString)) {
-//            quantity = Integer.parseInt(quantityString);
-//        }
-//
-//        //  Create a ContentValues object where column names are the keys,
-//        //  and stock attributes from the editor are the values.
-//        ContentValues values = new ContentValues();
-//
-//        values.put(StockEntry.COLUMN_ITEM_IMAGE, mByteImage);
-//        values.put(StockEntry.COLUMN_ITEM_NAME, name);
-//        values.put(StockEntry.COLUMN_ITEM_PRICE, price);
-//        values.put(StockEntry.COLUMN_ITEM_QUANTITY, quantity);
-//        values.put(StockEntry.COLUMN_ITEM_CATEGORY, mCategory);
-//        values.put(StockEntry.COLUMN_ITEM_DATE, date);
-//        values.put(StockEntry.COLUMN_ITEM_LOCATION, location);
-//        values.put(StockEntry.COLUMN_ITEM_SUPPLIER, supplier);
-//        values.put(StockEntry.COLUMN_ITEM_SUPPLIER_NUMBER, supplierContactNumber);
-//        values.put(StockEntry.COLUMN_ITEM_SUPPLIER_EMAIL, supplierEmailId);
-//
+
 //        //  Determine if this is a new or existing stock item by checking if
 //        //  mCurrentSelectedStockItem is null or not
 //        if (mCurrentSelectedStockItem == null) {
@@ -589,7 +526,7 @@ public class NewStockActivity extends AppCompatActivity implements NewStockContr
 
         //  Check if this is supposed to be a new stock item
         //  and check if all the fields in the editor are blank.
-        if (mCurrentSelectedStockItem == null &&
+        if (position == 0 &&
                 TextUtils.isEmpty(name) && TextUtils.isEmpty(priceString) &&
                 TextUtils.isEmpty(quantityString) && TextUtils.isEmpty(date) &&
                 TextUtils.isEmpty(location) && TextUtils.isEmpty(supplier) &&

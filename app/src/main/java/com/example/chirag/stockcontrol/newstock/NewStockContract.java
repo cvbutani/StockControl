@@ -1,4 +1,4 @@
-package com.example.chirag.stockcontrol;
+package com.example.chirag.stockcontrol.newstock;
 
 import com.example.chirag.stockcontrol.data.model.Stock;
 

@@ -1,4 +1,4 @@
-package com.example.chirag.stockcontrol;
+package com.example.chirag.stockcontrol.newstock;
 
 import android.content.Context;
 
@@ -15,7 +15,9 @@ public class NewStockPresenter implements NewStockContract.Presenter {
     private NewStockContract.View mCallback;
 
     private StockService mStockService;
-    int value;
+
+    private int value;
+
     NewStockPresenter(Context context) {
         mStockService = StockService.getInstance(new AppExecutors(), StockDatabase.getInstance(context).stockDao());
     }
