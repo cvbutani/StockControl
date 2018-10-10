@@ -70,9 +70,8 @@ public class NewStockPresenter implements NewStockContract.Presenter {
     }
 
     @Override
-    public void attachView(NewStockContract.View view, int position) {
+    public void attachView(NewStockContract.View view) {
         mCallback = view;
         getAllStockitems();
-        getStockData(position);
     }
 }

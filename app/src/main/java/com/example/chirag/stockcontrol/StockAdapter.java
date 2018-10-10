@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import android.widget.ImageView;
@@ -21,8 +22,15 @@ public class StockAdapter extends RecyclerView.Adapter<StockAdapter.ViewHolder> 
 
     private List<Stock> mStock;
 
-    public StockAdapter(List<Stock> stocks) {
+    private OnItemClickListener mOnClickListener;
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+    }
+
+    public StockAdapter(List<Stock> stocks, OnItemClickListener listener) {
         mStock = stocks;
+        mOnClickListener = listener;
     }
 
     @NonNull
@@ -45,7 +53,7 @@ public class StockAdapter extends RecyclerView.Adapter<StockAdapter.ViewHolder> 
         return mStock.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
         TextView tvName;
         TextView tvPrice;
         TextView tvCategory;
@@ -60,18 +68,19 @@ public class StockAdapter extends RecyclerView.Adapter<StockAdapter.ViewHolder> 
             tvCategory = (TextView) itemView.findViewById(R.id.category);
             tvQuantity = (TextView) itemView.findViewById(R.id.quantity);
             ivButton = (ImageView) itemView.findViewById(R.id.image);
+
+            itemView.setOnClickListener(this);
         }
 
 
         @Override
         public void onClick(View view) {
-
+            int clickedPosition = getAdapterPosition();
+            mOnClickListener.onItemClick(view, clickedPosition);
         }
     }
 
-    public interface OnItemClickListener {
-        void onItemClick(View view, int position);
-    }
+
 //
 //    private int updatedQuantity = 0;
 //

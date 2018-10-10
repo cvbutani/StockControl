@@ -10,7 +10,7 @@ import com.example.chirag.stockcontrol.util.AppExecutors;
 
 import java.util.List;
 
-public class StockService implements StockDataSource {
+public class  StockService implements StockDataSource {
     private static StockService INSTANCE;
 
     private StockDao mStockDao;

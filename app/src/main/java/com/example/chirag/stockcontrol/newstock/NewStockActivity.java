@@ -40,6 +40,7 @@ import android.widget.Toast;
 
 import com.example.chirag.stockcontrol.R;
 import com.example.chirag.stockcontrol.data.ImageCapture;
+import com.example.chirag.stockcontrol.data.StockEntry;
 import com.example.chirag.stockcontrol.data.model.Stock;
 
 import java.util.Calendar;
@@ -101,16 +102,17 @@ public class NewStockActivity extends AppCompatActivity implements NewStockContr
 
         Intent intent = getIntent();
         if (intent.hasExtra("POSITION")) {
-            position = (int) intent.getExtras().getLong("POSITION");
+            position = intent.getExtras().getInt("POSITION");
         }
 
         mStockPresenter = new NewStockPresenter(this);
-        mStockPresenter.attachView(this, position);
+        mStockPresenter.attachView(this);
 
         if (position != 0) {
             mDeleteButton.setVisibility(View.VISIBLE);
             mPlaceOrderLayout.setVisibility(View.VISIBLE);
             setTitle("Edit Stock");
+            mStockPresenter.getStockData(position);
         } else {
             mPlaceOrderLayout.setVisibility(View.GONE);
             mDeleteButton.setVisibility(View.GONE);

@@ -13,6 +13,7 @@ import android.os.Bundle;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,13 +28,8 @@ import com.example.chirag.stockcontrol.newstock.NewStockActivity;
 
 import java.util.List;
 
-public class StockActivity extends AppCompatActivity implements StockContract.View {
+public class StockActivity extends AppCompatActivity implements StockContract.View, StockAdapter.OnItemClickListener {
 
-//    private StockCursorAdapter mStockCursorAdapter;
-    public static final int STOCK_LOADER = 0;
-    ListView mStockListView;
-    private int updatedQuantity = 0;
-    List<Stock> mStock;
     StockPresenter mStockPresenter;
 
     @Override
@@ -52,19 +48,6 @@ public class StockActivity extends AppCompatActivity implements StockContract.Vi
 
         mStockPresenter = new StockPresenter(this);
         mStockPresenter.attachView(this);
-
-
-
-//        mStockListView = (ListView) findViewById(R.id.dialog_listview);
-//
-//        rvStocks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Intent intent = new Intent(StockActivity.this, NewStockActivity.class);
-//                intent.putExtra("POSITION", id);
-//                startActivity(intent);
-//            }
-//        });
 
     }
 
@@ -88,34 +71,6 @@ public class StockActivity extends AppCompatActivity implements StockContract.Vi
         return super.onOptionsItemSelected(item);
     }
 
-//    @Override
-//    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-//        String[] projection = {
-//                StockEntry._ID,
-//                StockEntry.COLUMN_ITEM_IMAGE,
-//                StockEntry.COLUMN_ITEM_NAME,
-//                StockEntry.COLUMN_ITEM_PRICE,
-//                StockEntry.COLUMN_ITEM_QUANTITY,
-//                StockEntry.COLUMN_ITEM_DATE,
-//                StockEntry.COLUMN_ITEM_CATEGORY,
-//                StockEntry.COLUMN_ITEM_LOCATION,
-//                StockEntry.COLUMN_ITEM_SUPPLIER,
-//                StockEntry.COLUMN_ITEM_SUPPLIER_NUMBER,
-//                StockEntry.COLUMN_ITEM_SUPPLIER_EMAIL
-//        };
-//        return new CursorLoader(this, StockEntry.CONTENT_URI, projection, null, null, null);
-//    }
-//
-//    @Override
-//    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-//        mStockCursorAdapter.swapCursor(data);
-//    }
-//
-//    @Override
-//    public void onLoaderReset(Loader<Cursor> loader) {
-//        mStockCursorAdapter.swapCursor(null);
-//    }
-
     private void showDeleteAllStockItemsDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.delete_all_dialog_msg);
@@ -123,7 +78,7 @@ public class StockActivity extends AppCompatActivity implements StockContract.Vi
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 //  User clicked the "Delete" button, so delete the pet.
-                deleteAllStockItems();
+//                deleteAllStockItems();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -141,30 +96,37 @@ public class StockActivity extends AppCompatActivity implements StockContract.Vi
         alertDialog.show();
     }
 
-    private void deleteAllStockItems() {
-
-//        int rowsDeleted = getContentResolver().delete(StockEntry.CONTENT_URI, null, null);
-
-        //  Show a toast message depending on whether or not the delete was successful.
-        if (rowsDeleted == 0) {
-            //  If no rows were deleted, then there was an error with the delete.
-            Toast.makeText(this, getString(R.string.delete_stock_failure),
-                    Toast.LENGTH_SHORT).show();
-        } else {
-            //  The delete was successful and we can display a toast.
-            Toast.makeText(this, getString(R.string.delete_stock_success),
-                    Toast.LENGTH_SHORT).show();
-        }
-    }
+//    private void deleteAllStockItems() {
+//
+////        int rowsDeleted = getContentResolver().delete(StockEntry.CONTENT_URI, null, null);
+//
+//        //  Show a toast message depending on whether or not the delete was successful.
+//        if (rowsDeleted == 0) {
+//            //  If no rows were deleted, then there was an error with the delete.
+//            Toast.makeText(this, getString(R.string.delete_stock_failure),
+//                    Toast.LENGTH_SHORT).show();
+//        } else {
+//            //  The delete was successful and we can display a toast.
+//            Toast.makeText(this, getString(R.string.delete_stock_success),
+//                    Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
     @Override
     public void getAllStockItems(List<Stock> stockItem) {
         RecyclerView rvStocks = findViewById(R.id.my_recycler_view);
-        StockAdapter adapter = new StockAdapter(stockItem);
+        StockAdapter adapter = new StockAdapter(stockItem, this);
         rvStocks.setLayoutManager(new LinearLayoutManager(this));
         rvStocks.setAdapter(adapter);
 
 
     }
 
+    @Override
+    public void onItemClick(View view, int position) {
+        Intent intent = new Intent(StockActivity.this, NewStockActivity.class);
+        intent.putExtra("POSITION", position+1);
+        Log.i("STOCK ACTIVITY ", " Position - - - " + position);
+        startActivity(intent);
+    }
 }
