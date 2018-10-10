@@ -199,9 +199,7 @@ public class NewStockActivity extends AppCompatActivity implements NewStockContr
             @Override
             public void onClick(View v) {
                 //  Save stock item to database
-//                saveStockItem();
                 insertStocks();
-
                 //  Exit activity
                 finish();
             }
@@ -550,7 +548,12 @@ public class NewStockActivity extends AppCompatActivity implements NewStockContr
             quantity = Integer.parseInt(quantityString);
         }
         stock = new Stock(mByteImage, name, price, quantity, date, mCategory, location, supplier, supplierContactNumber, supplierEmailId);
-        mStockPresenter.insertStock(stock);
+        if (position == 0) {
+            mStockPresenter.insertStock(stock);
+        } else {
+            mStockPresenter.updateStock(stock);
+        }
+
     }
 
     public void deleteStock(int response) {

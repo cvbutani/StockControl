@@ -114,4 +114,15 @@ public class  StockService implements StockDataSource {
         };
         mAppExecutors.getDiskIO().execute(updateStockRunnable);
     }
+
+    @Override
+    public void updateStockItems(final Stock stock) {
+        Runnable updatedStockRunnable = new Runnable() {
+            @Override
+            public void run() {
+                mStockDao.updateStockItem(stock);
+            }
+        };
+        mAppExecutors.getDiskIO().execute(updatedStockRunnable);
+    }
 }

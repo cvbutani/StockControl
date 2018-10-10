@@ -14,4 +14,6 @@ public interface StockDataSource {
 
     void updateStockItem(int updatedQuantity, int stockId);
 
+    void updateStockItems(Stock stock);
+
 }

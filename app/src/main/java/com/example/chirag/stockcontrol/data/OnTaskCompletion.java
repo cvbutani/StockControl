@@ -19,4 +19,8 @@ public interface OnTaskCompletion {
     interface OnDeleteStockItem {
         void onDeleteStockSuccess(int response);
     }
+
+    interface OnUpdateStockItem {
+        void onUpdateStockSuccess(Stock stock);
+    }
 }

@@ -70,6 +70,11 @@ public class NewStockPresenter implements NewStockContract.Presenter {
     }
 
     @Override
+    public void updateStock(Stock stock) {
+        mStockService.updateStockItems(stock);
+    }
+
+    @Override
     public void attachView(NewStockContract.View view) {
         mCallback = view;
         getAllStockitems();

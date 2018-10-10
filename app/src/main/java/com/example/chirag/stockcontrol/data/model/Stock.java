@@ -69,10 +69,6 @@ public class Stock {
         this.supplierContactNumber = supplierContactNumber;
         this.supplierEmailId = supplierEmailId;
     }
-//    @Ignore
-//    public Stock(byte[] mImage, @NonNull String mName, @NonNull double mPrice, int mQuality, String mDate, @NonNull int mCategory, String mLocation, String mSupplierName, String mSupplierContactNumber, String mSupplierEmailId) {
-//        this(mImage, mName, mPrice, mQuality, mDate, mCategory, mLocation, mSupplierName, mSupplierContactNumber, mSupplierEmailId);
-//    }
 
     @NonNull
     public Integer getId() {
