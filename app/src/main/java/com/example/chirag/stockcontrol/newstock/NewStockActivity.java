@@ -551,6 +551,7 @@ public class NewStockActivity extends AppCompatActivity implements NewStockContr
         if (position == 0) {
             mStockPresenter.insertStock(stock);
         } else {
+            stock.setId(position);
             mStockPresenter.updateStock(stock);
         }
 
