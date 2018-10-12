@@ -7,7 +7,6 @@ import java.util.List;
 public interface NewStockContract {
 
     interface View {
-        void getAllStockItems(List<Stock> stockItem);
 
         void getStock(Stock stock);
 
@@ -16,8 +15,6 @@ public interface NewStockContract {
     }
 
     interface Presenter {
-
-        void getAllStockitems();
 
         void getStockData(int stockId);
 

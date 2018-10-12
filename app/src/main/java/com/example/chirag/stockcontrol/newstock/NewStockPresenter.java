@@ -23,21 +23,6 @@ public class NewStockPresenter implements NewStockContract.Presenter {
     }
 
     @Override
-    public void getAllStockitems() {
-        mStockService.getAllStockItems(new OnTaskCompletion.OnGetStockItems() {
-            @Override
-            public void stockItemsSuccess(List<Stock> stock) {
-                mCallback.getAllStockItems(stock);
-            }
-
-            @Override
-            public void stockItemsFailure(String errorMessage) {
-
-            }
-        });
-    }
-
-    @Override
     public void getStockData(final int stockId) {
         mStockService.getStockItem(stockId, new OnTaskCompletion.OnGetStock() {
             @Override
@@ -77,6 +62,5 @@ public class NewStockPresenter implements NewStockContract.Presenter {
     @Override
     public void attachView(NewStockContract.View view) {
         mCallback = view;
-        getAllStockitems();
     }
 }

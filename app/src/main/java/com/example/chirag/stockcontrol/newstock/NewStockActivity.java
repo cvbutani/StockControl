@@ -105,20 +105,23 @@ public class NewStockActivity extends AppCompatActivity implements NewStockContr
             position = intent.getExtras().getInt("POSITION");
         }
 
+        // Attach presenter with Activity
         mStockPresenter = new NewStockPresenter(this);
         mStockPresenter.attachView(this);
-
+        // if position clicked was 0 then it will set title as Edit Stock otherwise
         if (position != 0) {
             mDeleteButton.setVisibility(View.VISIBLE);
             mPlaceOrderLayout.setVisibility(View.VISIBLE);
             setTitle("Edit Stock");
             mStockPresenter.getStockData(position);
+            // It will set title as Add New Stock Item
         } else {
             mPlaceOrderLayout.setVisibility(View.GONE);
             mDeleteButton.setVisibility(View.GONE);
             setTitle("Add New Stock Item");
         }
 
+        // camera to take picture of stock item
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,7 +137,7 @@ public class NewStockActivity extends AppCompatActivity implements NewStockContr
                 startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
             }
         });
-
+        // date picker dialog
         tvDatePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -151,7 +154,7 @@ public class NewStockActivity extends AppCompatActivity implements NewStockContr
                 dialog.show();
             }
         });
-
+        // date display as String
         mDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -160,14 +163,14 @@ public class NewStockActivity extends AppCompatActivity implements NewStockContr
             }
         };
         setupSpinner();
-
+        // delete stock
         mDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showDeleteConfirmationDialog();
             }
         });
-
+        // place order if stock is low
         mPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -194,7 +197,7 @@ public class NewStockActivity extends AppCompatActivity implements NewStockContr
                 }
             }
         });
-
+        // save stock in database
         mSaveItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -239,6 +242,9 @@ public class NewStockActivity extends AppCompatActivity implements NewStockContr
         mOrderQuantity.setOnTouchListener(mTouchListener);
     }
 
+    /**
+     * Setup Spinner
+     */
     private void setupSpinner() {
         ArrayAdapter categorySpinnerAdapter = ArrayAdapter.createFromResource(this,
                 R.array.array_category_options, android.R.layout.simple_spinner_item);
@@ -280,44 +286,6 @@ public class NewStockActivity extends AppCompatActivity implements NewStockContr
         });
     }
 
-    /**
-     * Get User input from editor and save stock item in database.
-     */
-
-//        //  Determine if this is a new or existing stock item by checking if
-//        //  mCurrentSelectedStockItem is null or not
-//        if (mCurrentSelectedStockItem == null) {
-//            //  This is a NEW stock item, so insert a new stock item into the provider,
-//            //  returning the content URI for the new stock item.
-//            Uri newUri = getContentResolver().insert(StockEntry.CONTENT_URI, values);
-//            //  Show a toast message depending on whether or not the insertion was successful.
-//            if (newUri != null) {
-//                //  If the new content Uri is not null, then we can show successful toast.
-//                Toast.makeText(getApplicationContext(), getString(R.string.new_stock_added_success),
-//                        Toast.LENGTH_SHORT).show();
-//            } else {
-//                //  otherwise, we can display an error with the insertion.
-//                Toast.makeText(getApplicationContext(), getString(R.string.new_stock_added_failure),
-//                        Toast.LENGTH_SHORT).show();
-//            }
-//        } else {
-//            //  This is an EXISTING stock items. Update the pet with content URI: mCurrentSelectedStockItems
-//            //  and pass in the new ContentValues. Pass in null for the selection and selection args
-//            //  because mCurrentSelectedStockItem will already identify the correct row in the database
-//            //  that we want to modify.
-//            int rowsChanged = getContentResolver().update(mCurrentSelectedStockItem, values, null, null);
-//            //  Shows a toast message depending on whether or not update was successful.
-//            if (rowsChanged == 0) {
-//                //  If no rows were affected, then there was an error with the update.
-//                Toast.makeText(getApplicationContext(), getString(R.string.update_stock_failure),
-//                        Toast.LENGTH_SHORT).show();
-//            } else {
-//                //  Otherwise, the update was successful and we can display a toast.
-//                Toast.makeText(getApplicationContext(), getString(R.string.update_stock_success),
-//                        Toast.LENGTH_SHORT).show();
-//            }
-//        }
-//    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         //  User clicked on a menu option in the app bar overflow menu
@@ -441,17 +409,11 @@ public class NewStockActivity extends AppCompatActivity implements NewStockContr
         alertDialog.show();
     }
 
-    @Override
-    public void getAllStockItems(List<Stock> stockItem) {
-        Log.i("STOCK ITEM - ", stockItem.size() + "");
-        if (stockItem != null) {
-            Log.i("STOCK ITEM - ", stockItem.size() + "");
-            for (int i = 0; i < stockItem.size(); i++) {
-                Log.i("FOUND SOMETHING: ", stockItem.get(i).getId().toString());
-            }
-        }
-    }
-
+    /**
+     * Get stock item from database and display on UI.
+     *
+     * @param stock item to be displayed on UI.
+     */
     @Override
     public void getStock(Stock stock) {
         int quantity = stock.getQuantity();
@@ -506,6 +468,9 @@ public class NewStockActivity extends AppCompatActivity implements NewStockContr
         }
     }
 
+    /**
+     * Get User input from editor and save stock item in database.
+     */
     @Override
     public void insertStocks() {
         //  Read from input fields
@@ -548,17 +513,27 @@ public class NewStockActivity extends AppCompatActivity implements NewStockContr
             quantity = Integer.parseInt(quantityString);
         }
         stock = new Stock(mByteImage, name, price, quantity, date, mCategory, location, supplier, supplierContactNumber, supplierEmailId);
+
         if (position == 0) {
             mStockPresenter.insertStock(stock);
+            //  Show a toast message depending on whether or not the insertion was successful.
+            Toast.makeText(getApplicationContext(), getString(R.string.new_stock_added_success),
+                    Toast.LENGTH_SHORT).show();
         } else {
             stock.setId(position);
             mStockPresenter.updateStock(stock);
+            // Update was successful and we can display a toast.
+            Toast.makeText(getApplicationContext(), getString(R.string.update_stock_success),
+                        Toast.LENGTH_SHORT).show();
         }
-
     }
 
+    /**
+     * Delete Stock item Toast depending on response
+     *
+     * @param response is 0 error if 1 success
+     */
     public void deleteStock(int response) {
-
         //  Show a toast message depending on whether or not the delete was successful.
         if (response == 0) {
             //  If no rows were deleted, then there was an error with the delete.
@@ -569,7 +544,6 @@ public class NewStockActivity extends AppCompatActivity implements NewStockContr
             Toast.makeText(this, getString(R.string.delete_stock_success),
                     Toast.LENGTH_SHORT).show();
         }
-
         finish();
     }
 }

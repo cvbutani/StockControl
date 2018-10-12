@@ -1,7 +1,6 @@
 package com.example.chirag.stockcontrol.data.local;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.example.chirag.stockcontrol.data.OnTaskCompletion;
 import com.example.chirag.stockcontrol.data.StockDataSource;
@@ -22,6 +21,13 @@ public class  StockService implements StockDataSource {
         mStockDao = stockDao;
     }
 
+    /**
+     * Method will be called to create one single instance of stockService class
+     *
+     * @param appExecutors to run tasks in background or main thread
+     * @param stockDao database interface
+     * @return instance of StockService class
+     */
     public static StockService getInstance(@NonNull AppExecutors appExecutors, @NonNull StockDao stockDao) {
         if (INSTANCE == null) {
             synchronized (StockService.class) {
@@ -33,6 +39,11 @@ public class  StockService implements StockDataSource {
         return INSTANCE;
     }
 
+    /**
+     * Method will get all stock items from database
+     *
+     * @param callback will get all stock items either success or failure from stockDao
+     */
     @Override
     public void getAllStockItems(final OnTaskCompletion.OnGetStockItems callback) {
         Runnable getStockItemsRunnable = new Runnable() {
@@ -54,6 +65,12 @@ public class  StockService implements StockDataSource {
         mAppExecutors.getDiskIO().execute(getStockItemsRunnable);
     }
 
+    /**
+     * Method will be executed when user requests for particular stock item from database
+     *
+     * @param stockId item id to pull data from database
+     * @param callback stock item details will be passed on to callback
+     */
     @Override
     public void getStockItem(final int stockId, final OnTaskCompletion.OnGetStock callback) {
         Runnable getStockRunnable = new Runnable() {
@@ -75,7 +92,11 @@ public class  StockService implements StockDataSource {
         mAppExecutors.getDiskIO().execute(getStockRunnable);
     }
 
-
+    /**
+     * Method will be executed when user wants to add data in database
+     *
+     * @param item stock item detail to be entered in database
+     */
     @Override
     public void insertStockItem(final Stock item) {
         Runnable insertStockRunnable = new Runnable() {
@@ -87,6 +108,12 @@ public class  StockService implements StockDataSource {
         mAppExecutors.getDiskIO().execute(insertStockRunnable);
     }
 
+    /**
+     * Method will be executed when user wants to delete any stock items
+     *
+     * @param stockId stock id that user wants to delete
+     * @param callback it will pass integer if successfully deleted
+     */
     @Override
     public void deleteStockItemData(final int stockId, final OnTaskCompletion.OnDeleteStockItem callback) {
         Runnable deleteStockRunnable = new Runnable() {
@@ -104,6 +131,12 @@ public class  StockService implements StockDataSource {
         mAppExecutors.getDiskIO().execute(deleteStockRunnable);
     }
 
+    /**
+     * Method will be executed when user wants to update quantity of particular stock item
+     *
+     * @param updatedQuantity updated/changed quantity
+     * @param stockId stock id that user wants to update quantity
+     */
     @Override
     public void updateStockItem(final int updatedQuantity, final int stockId) {
         Runnable updateStockRunnable = new Runnable() {
@@ -115,6 +148,11 @@ public class  StockService implements StockDataSource {
         mAppExecutors.getDiskIO().execute(updateStockRunnable);
     }
 
+    /**
+     * Update whole stock item that user wants to enter in database
+     *
+     * @param stock updated stock details
+     */
     @Override
     public void updateStockItems(final Stock stock) {
         Runnable updatedStockRunnable = new Runnable() {
