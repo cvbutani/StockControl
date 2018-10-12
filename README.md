@@ -1,29 +1,26 @@
-# Stock Control
+# Stock Control - MVP MODEL
 
 
 #### Overview
 The goal is to design and create the structure of an Inventory App which allows a store to keep track of its inventory of products. The app stores information about price, quantity available, supplier, and a picture of the product. The project is part of Nanodegree program on [Udacity](https://www.udacity.com/).
 
 #### Helpers
-- SQLite Database
+- Room Persistence Library
 - Camera Intent
 - Alert dialog
-- CursorLoader
-- CursorAdapter
 - CRUD operations
-- Loader Manager
-- AsyncTask Runnable
 - Coordinator layout
-- SQLiteOpenHelper
-- Loader Manager
 - Toast
 - BaseColumns
-- Content Provider
-- FloatingActionButton
+- Floating Action Button
+- App Executors
+- Recycler View
 
 ###### Gradle dependencies
 ```
-implementation 'com.android.support:design:27.1.1
+implementation 'com.android.support:design:27.1.1'
+implementation 'android.arch.persistence.room:runtime:1.1.1'
+implementation 'com.android.support:recyclerview-v7:27.1.1'
 ```
 
 #### Features
