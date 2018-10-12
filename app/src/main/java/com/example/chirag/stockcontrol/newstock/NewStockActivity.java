@@ -1,17 +1,12 @@
-package com.example.chirag.stockcontrol;
+package com.example.chirag.stockcontrol.newstock;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 
-import android.app.LoaderManager;
-import android.content.ContentValues;
-import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 
-import android.content.Loader;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 
@@ -27,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import android.text.TextUtils;
 
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -38,25 +34,28 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.chirag.stockcontrol.R;
 import com.example.chirag.stockcontrol.data.ImageCapture;
-import com.example.chirag.stockcontrol.data.StockContract.StockEntry;
+import com.example.chirag.stockcontrol.data.StockEntry;
+import com.example.chirag.stockcontrol.data.model.Stock;
 
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * StockControl
  * Created by Chirag on 06/07/18.
  */
 
-public class NewStockActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class NewStockActivity extends AppCompatActivity implements NewStockContract.View {
 
     private DatePickerDialog.OnDateSetListener mDateSetListener;
 
+    private String TAG = "NEW STOCK ACTIVITY --- ";
     private TextView cameraTextView;
     private LinearLayout mPlaceOrderLayout;
 
@@ -77,15 +76,15 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
     private Button mDeleteButton;
     private Button mPlaceOrder;
     private Button mSaveItem;
+    private Stock stock;
+    private int position;
 
-
-    public static final int STOCK_LOADER = 1;
     public static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private boolean mStockHasChanged = false;
     private int mCategory = 0;
-    private Uri mCurrentSelectedStockItem;
 
+    private NewStockPresenter mStockPresenter;
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -102,20 +101,27 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
         findAllViewsAndAttachListener();
 
         Intent intent = getIntent();
-        mCurrentSelectedStockItem = intent.getData();
+        if (intent.hasExtra("POSITION")) {
+            position = intent.getExtras().getInt("POSITION");
+        }
 
-        if (mCurrentSelectedStockItem != null) {
+        // Attach presenter with Activity
+        mStockPresenter = new NewStockPresenter(this);
+        mStockPresenter.attachView(this);
+        // if position clicked was 0 then it will set title as Edit Stock otherwise
+        if (position != 0) {
             mDeleteButton.setVisibility(View.VISIBLE);
             mPlaceOrderLayout.setVisibility(View.VISIBLE);
             setTitle("Edit Stock");
-            getLoaderManager().initLoader(STOCK_LOADER, null, this);
+            mStockPresenter.getStockData(position);
+            // It will set title as Add New Stock Item
         } else {
             mPlaceOrderLayout.setVisibility(View.GONE);
             mDeleteButton.setVisibility(View.GONE);
             setTitle("Add New Stock Item");
         }
 
-
+        // camera to take picture of stock item
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,7 +137,7 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
                 startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
             }
         });
-
+        // date picker dialog
         tvDatePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -148,7 +154,7 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
                 dialog.show();
             }
         });
-
+        // date display as String
         mDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -157,14 +163,14 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
             }
         };
         setupSpinner();
-
+        // delete stock
         mDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showDeleteConfirmationDialog();
             }
         });
-
+        // place order if stock is low
         mPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -191,12 +197,12 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
                 }
             }
         });
-
+        // save stock in database
         mSaveItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //  Save stock item to database
-                saveStockItem();
+                insertStocks();
                 //  Exit activity
                 finish();
             }
@@ -236,6 +242,9 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
         mOrderQuantity.setOnTouchListener(mTouchListener);
     }
 
+    /**
+     * Setup Spinner
+     */
     private void setupSpinner() {
         ArrayAdapter categorySpinnerAdapter = ArrayAdapter.createFromResource(this,
                 R.array.array_category_options, android.R.layout.simple_spinner_item);
@@ -275,100 +284,6 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
                 mCategory = StockEntry.CATEGORY_UNKNOWN;
             }
         });
-    }
-
-    /**
-     * Get User input from editor and save stock item in database.
-     */
-    private void saveStockItem() {
-        //  Read from input fields
-        //  Use trim to eliminate leading or trailing white space
-        double price = 0;
-        int quantity = 0;
-        String name = mNameEditText.getText().toString().trim();
-        String priceString = mPriceEditText.getText().toString().trim();
-        String quantityString = mQuantityEditText.getText().toString().trim();
-        String date = tvDatePicker.getText().toString().trim();
-        String location = mLocationEditText.getText().toString().trim();
-        String supplier = mSupplierEditText.getText().toString().trim();
-        String supplierContactNumber = mSupplierContactNumberEditText.getText().toString().trim();
-        String supplierEmailId = mSupplerEmailId.getText().toString().trim();
-
-        Bitmap bitmapImage = ((BitmapDrawable) mImageView.getDrawable()).getBitmap();
-        byte[] mByteImage = ImageCapture.getBytes(bitmapImage);
-
-        //  Check if this is supposed to be a new stock item
-        //  and check if all the fields in the editor are blank.
-        if (mCurrentSelectedStockItem == null &&
-                TextUtils.isEmpty(name) && TextUtils.isEmpty(priceString) &&
-                TextUtils.isEmpty(quantityString) && TextUtils.isEmpty(date) &&
-                TextUtils.isEmpty(location) && TextUtils.isEmpty(supplier) &&
-                TextUtils.isEmpty(supplierContactNumber) && TextUtils.isEmpty(supplierEmailId)) {
-            //  Since no fields were modified, we can return early without creating a new Stock.
-            //  No need to create ContentValues and no need to do any ContentProvider operations.
-            return;
-        }
-
-        //  If price is not provided by the user, don't try to parse the string into an
-        //  integer value. Use 0 by default.
-        if (!TextUtils.isEmpty(priceString)) {
-            price = Integer.parseInt(priceString);
-        }
-
-        //  If quantity is not provided by the user, don't try to parse the string into an
-        //  integer value. Use 0 by default.
-        if (!TextUtils.isEmpty(quantityString)) {
-            quantity = Integer.parseInt(quantityString);
-        }
-
-        //  Create a ContentValues object where column names are the keys,
-        //  and stock attributes from the editor are the values.
-        ContentValues values = new ContentValues();
-
-        values.put(StockEntry.COLUMN_ITEM_IMAGE, mByteImage);
-        values.put(StockEntry.COLUMN_ITEM_NAME, name);
-        values.put(StockEntry.COLUMN_ITEM_PRICE, price);
-        values.put(StockEntry.COLUMN_ITEM_QUANTITY, quantity);
-        values.put(StockEntry.COLUMN_ITEM_CATEGORY, mCategory);
-        values.put(StockEntry.COLUMN_ITEM_DATE, date);
-        values.put(StockEntry.COLUMN_ITEM_LOCATION, location);
-        values.put(StockEntry.COLUMN_ITEM_SUPPLIER, supplier);
-        values.put(StockEntry.COLUMN_ITEM_SUPPLIER_NUMBER, supplierContactNumber);
-        values.put(StockEntry.COLUMN_ITEM_SUPPLIER_EMAIL, supplierEmailId);
-
-        //  Determine if this is a new or existing stock item by checking if
-        //  mCurrentSelectedStockItem is null or not
-        if (mCurrentSelectedStockItem == null) {
-            //  This is a NEW stock item, so insert a new stock item into the provider,
-            //  returning the content URI for the new stock item.
-            Uri newUri = getContentResolver().insert(StockEntry.CONTENT_URI, values);
-            //  Show a toast message depending on whether or not the insertion was successful.
-            if (newUri != null) {
-                //  If the new content Uri is not null, then we can show successful toast.
-                Toast.makeText(getApplicationContext(), getString(R.string.new_stock_added_success),
-                        Toast.LENGTH_SHORT).show();
-            } else {
-                //  otherwise, we can display an error with the insertion.
-                Toast.makeText(getApplicationContext(), getString(R.string.new_stock_added_failure),
-                        Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            //  This is an EXISTING stock items. Update the pet with content URI: mCurrentSelectedStockItems
-            //  and pass in the new ContentValues. Pass in null for the selection and selection args
-            //  because mCurrentSelectedStockItem will already identify the correct row in the database
-            //  that we want to modify.
-            int rowsChanged = getContentResolver().update(mCurrentSelectedStockItem, values, null, null);
-            //  Shows a toast message depending on whether or not update was successful.
-            if (rowsChanged == 0) {
-                //  If no rows were affected, then there was an error with the update.
-                Toast.makeText(getApplicationContext(), getString(R.string.update_stock_failure),
-                        Toast.LENGTH_SHORT).show();
-            } else {
-                //  Otherwise, the update was successful and we can display a toast.
-                Toast.makeText(getApplicationContext(), getString(R.string.update_stock_success),
-                        Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 
     @Override
@@ -433,106 +348,6 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
         showUnsavedChangesDialog(discardButtonClickListener);
     }
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        String[] projection = {
-                StockEntry._ID,
-                StockEntry.COLUMN_ITEM_IMAGE,
-                StockEntry.COLUMN_ITEM_NAME,
-                StockEntry.COLUMN_ITEM_PRICE,
-                StockEntry.COLUMN_ITEM_QUANTITY,
-                StockEntry.COLUMN_ITEM_DATE,
-                StockEntry.COLUMN_ITEM_CATEGORY,
-                StockEntry.COLUMN_ITEM_LOCATION,
-                StockEntry.COLUMN_ITEM_SUPPLIER,
-                StockEntry.COLUMN_ITEM_SUPPLIER_NUMBER,
-                StockEntry.COLUMN_ITEM_SUPPLIER_EMAIL
-        };
-        return new CursorLoader(this, mCurrentSelectedStockItem, projection, null, null, null);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        if (data.moveToFirst()) {
-            int imageColumnIndex = data.getColumnIndex(StockEntry.COLUMN_ITEM_IMAGE);
-            int nameColumnIndex = data.getColumnIndex(StockEntry.COLUMN_ITEM_NAME);
-            int priceColumnIndex = data.getColumnIndex(StockEntry.COLUMN_ITEM_PRICE);
-            int quantityColumnIndex = data.getColumnIndex(StockEntry.COLUMN_ITEM_QUANTITY);
-            int dateColumnIndex = data.getColumnIndex(StockEntry.COLUMN_ITEM_DATE);
-            int categoryColumnIndex = data.getColumnIndex(StockEntry.COLUMN_ITEM_CATEGORY);
-            int locationColumnIndex = data.getColumnIndex(StockEntry.COLUMN_ITEM_LOCATION);
-            int supplierColumnIndex = data.getColumnIndex(StockEntry.COLUMN_ITEM_SUPPLIER);
-            int supplierNumberColumnIndex = data.getColumnIndex(StockEntry.COLUMN_ITEM_SUPPLIER_NUMBER);
-            int supplierEmailIdColumnIndex = data.getColumnIndex(StockEntry.COLUMN_ITEM_SUPPLIER_EMAIL);
-
-            byte[] bitmap = data.getBlob(imageColumnIndex);
-
-            Bitmap img = ImageCapture.getImage(bitmap);
-            String name = data.getString(nameColumnIndex);
-            int price = data.getInt(priceColumnIndex);
-            int quantity = data.getInt(quantityColumnIndex);
-            String location = data.getString(locationColumnIndex);
-            String supplier = data.getString(supplierColumnIndex);
-            String date = data.getString(dateColumnIndex);
-            int category = data.getInt(categoryColumnIndex);
-            String supplierNumber = data.getString(supplierNumberColumnIndex);
-            String supplierEmail = data.getString(supplierEmailIdColumnIndex);
-
-            if (quantity == 0) {
-                mPlaceOrderLayout.setVisibility(View.VISIBLE);
-            } else if (quantity <= 15 && quantity > 0) {
-                mPlaceOrderLayout.setVisibility(View.VISIBLE);
-            } else {
-                mPlaceOrderLayout.setVisibility(View.GONE);
-            }
-
-            mNameEditText.setText(name);
-            mImageView.setImageBitmap(img);
-            mPriceEditText.setText(Integer.toString(price));
-            mQuantityEditText.setText(Integer.toString(quantity));
-            tvDatePicker.setText(date);
-            mLocationEditText.setText(location);
-            mSupplierEditText.setText(supplier);
-            mSupplierContactNumberEditText.setText(supplierNumber);
-            mSupplerEmailId.setText(supplierEmail);
-
-            switch (category) {
-                case StockEntry.CATEGORY_ADULT_FASHION:
-                    mCategorySpinner.setSelection(1);
-                    break;
-                case StockEntry.CATEGORY_BABY_CLOTHING:
-                    mCategorySpinner.setSelection(2);
-                    break;
-                case StockEntry.CATEGORY_BEAUTY_COSMETICS:
-                    mCategorySpinner.setSelection(3);
-                    break;
-                case StockEntry.CATEGORY_BOOKS:
-                    mCategorySpinner.setSelection(4);
-                    break;
-                case StockEntry.CATEGORY_ELECTRONICS:
-                    mCategorySpinner.setSelection(5);
-                    break;
-                case StockEntry.CATEGORY_FOOD:
-                    mCategorySpinner.setSelection(6);
-                    break;
-                case StockEntry.CATEGORY_HEALTH:
-                    mCategorySpinner.setSelection(7);
-                    break;
-                case StockEntry.CATEGORY_HOUSEWARE:
-                    mCategorySpinner.setSelection(8);
-                    break;
-                case StockEntry.CATEGORY_GAMES:
-                    mCategorySpinner.setSelection(9);
-                    break;
-            }
-        }
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-
-    }
-
     /**
      * Show a dialog that warns the user there are unsaved changes that will be lost
      * if they continue leaving the editor.
@@ -574,7 +389,9 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 //  User clicked the "Delete" button, so delete the pet.
-                deleteStockItem();
+                int response = mStockPresenter.deleteStockData(position);
+                //  Show a toast message depending on whether or not the delete was successful.
+                deleteStock(response);
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -592,24 +409,140 @@ public class NewStockActivity extends AppCompatActivity implements LoaderManager
         alertDialog.show();
     }
 
-    private void deleteStockItem() {
-        //  Only perform the delete tif this is an existing stock item.
-        if (mCurrentSelectedStockItem != null) {
-            //  Call the ContentResolver to delete the pet at the given content URI.
-            //  Pass in null for the selection and selection args because the mCurrentSelectedStockItem
-            //  content URI already identifies the stock item that we want.
-            int rowsDeleted = getContentResolver().delete(mCurrentSelectedStockItem, null, null);
+    /**
+     * Get stock item from database and display on UI.
+     *
+     * @param stock item to be displayed on UI.
+     */
+    @Override
+    public void getStock(Stock stock) {
+        int quantity = stock.getQuantity();
 
-            //  Show a toast message depending on whether or not the delete was successful.
-            if (rowsDeleted == 0) {
-                //  If no rows were deleted, then there was an error with the delete.
-                Toast.makeText(this, getString(R.string.delete_stock_failure),
+        mNameEditText.setText(stock.getName());
+        mImageView.setImageBitmap(ImageCapture.getImage(stock.getImage()));
+        mPriceEditText.setText(Double.toString(stock.getPrice()));
+        mQuantityEditText.setText(Integer.toString(quantity));
+        tvDatePicker.setText(stock.getDate());
+        mLocationEditText.setText(stock.getLocation());
+        mSupplierEditText.setText(stock.getSupplierName());
+        mSupplierContactNumberEditText.setText(stock.getSupplierContactNumber());
+        mSupplerEmailId.setText(stock.getSupplierEmailId());
+
+        if (quantity == 0) {
+            mPlaceOrderLayout.setVisibility(View.VISIBLE);
+        } else if (quantity <= 15 && quantity > 0) {
+            mPlaceOrderLayout.setVisibility(View.VISIBLE);
+        } else {
+            mPlaceOrderLayout.setVisibility(View.GONE);
+        }
+
+        int category = stock.getCategory();
+        switch (category) {
+            case StockEntry.CATEGORY_ADULT_FASHION:
+                mCategorySpinner.setSelection(1);
+                break;
+            case StockEntry.CATEGORY_BABY_CLOTHING:
+                mCategorySpinner.setSelection(2);
+                break;
+            case StockEntry.CATEGORY_BEAUTY_COSMETICS:
+                mCategorySpinner.setSelection(3);
+                break;
+            case StockEntry.CATEGORY_BOOKS:
+                mCategorySpinner.setSelection(4);
+                break;
+            case StockEntry.CATEGORY_ELECTRONICS:
+                mCategorySpinner.setSelection(5);
+                break;
+            case StockEntry.CATEGORY_FOOD:
+                mCategorySpinner.setSelection(6);
+                break;
+            case StockEntry.CATEGORY_HEALTH:
+                mCategorySpinner.setSelection(7);
+                break;
+            case StockEntry.CATEGORY_HOUSEWARE:
+                mCategorySpinner.setSelection(8);
+                break;
+            case StockEntry.CATEGORY_GAMES:
+                mCategorySpinner.setSelection(9);
+                break;
+        }
+    }
+
+    /**
+     * Get User input from editor and save stock item in database.
+     */
+    @Override
+    public void insertStocks() {
+        //  Read from input fields
+        //  Use trim to eliminate leading or trailing white space
+        double price = 0;
+        int quantity = 0;
+        String name = mNameEditText.getText().toString().trim();
+        String priceString = mPriceEditText.getText().toString().trim();
+        String quantityString = mQuantityEditText.getText().toString().trim();
+        String date = tvDatePicker.getText().toString().trim();
+        String location = mLocationEditText.getText().toString().trim();
+        String supplier = mSupplierEditText.getText().toString().trim();
+        String supplierContactNumber = mSupplierContactNumberEditText.getText().toString().trim();
+        String supplierEmailId = mSupplerEmailId.getText().toString().trim();
+
+        Bitmap bitmapImage = ((BitmapDrawable) mImageView.getDrawable()).getBitmap();
+        byte[] mByteImage = ImageCapture.getBytes(bitmapImage);
+
+        //  Check if this is supposed to be a new stock item
+        //  and check if all the fields in the editor are blank.
+        if (position == 0 &&
+                TextUtils.isEmpty(name) && TextUtils.isEmpty(priceString) &&
+                TextUtils.isEmpty(quantityString) && TextUtils.isEmpty(date) &&
+                TextUtils.isEmpty(location) && TextUtils.isEmpty(supplier) &&
+                TextUtils.isEmpty(supplierContactNumber) && TextUtils.isEmpty(supplierEmailId)) {
+            //  Since no fields were modified, we can return early without creating a new Stock.
+            //  No need to create ContentValues and no need to do any ContentProvider operations.
+            return;
+        }
+
+        //  If price is not provided by the user, don't try to parse the string into an
+        //  integer value. Use 0 by default.
+        if (!TextUtils.isEmpty(priceString)) {
+            price = Double.parseDouble(priceString);
+        }
+
+        //  If quantity is not provided by the user, don't try to parse the string into an
+        //  integer value. Use 0 by default.
+        if (!TextUtils.isEmpty(quantityString)) {
+            quantity = Integer.parseInt(quantityString);
+        }
+        stock = new Stock(mByteImage, name, price, quantity, date, mCategory, location, supplier, supplierContactNumber, supplierEmailId);
+
+        if (position == 0) {
+            mStockPresenter.insertStock(stock);
+            //  Show a toast message depending on whether or not the insertion was successful.
+            Toast.makeText(getApplicationContext(), getString(R.string.new_stock_added_success),
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            stock.setId(position);
+            mStockPresenter.updateStock(stock);
+            // Update was successful and we can display a toast.
+            Toast.makeText(getApplicationContext(), getString(R.string.update_stock_success),
                         Toast.LENGTH_SHORT).show();
-            } else {
-                //  The delete was successful and we can display a toast.
-                Toast.makeText(this, getString(R.string.delete_stock_success),
-                        Toast.LENGTH_SHORT).show();
-            }
+        }
+    }
+
+    /**
+     * Delete Stock item Toast depending on response
+     *
+     * @param response is 0 error if 1 success
+     */
+    public void deleteStock(int response) {
+        //  Show a toast message depending on whether or not the delete was successful.
+        if (response == 0) {
+            //  If no rows were deleted, then there was an error with the delete.
+            Toast.makeText(this, getString(R.string.delete_stock_failure),
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            //  The delete was successful and we can display a toast.
+            Toast.makeText(this, getString(R.string.delete_stock_success),
+                    Toast.LENGTH_SHORT).show();
         }
         finish();
     }
