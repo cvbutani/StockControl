@@ -5,9 +5,11 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import com.example.chirag.stockcontrol.data.model.Stock;
+import com.example.chirag.stockcontrol.data.entities.StockEntity;
 
 import java.util.List;
+
+import io.reactivex.Maybe;
 
 import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 
@@ -20,7 +22,7 @@ public interface StockDao {
      * @return all stocks
      */
     @Query("SELECT * FROM tasks")
-    List<Stock> getStocks();
+    Maybe<List<StockEntity>> getStocks();
 
     /**
      * Selects only one stock from table.
@@ -28,8 +30,8 @@ public interface StockDao {
      * @param taskId stock id to be selected
      * @return selected stock item using @param taskId
      */
-    @Query("SELECT * FROM Tasks WHERE _ID = :taskId")
-    Stock getStockById(int taskId);
+    @Query("SELECT * FROM tasks WHERE _ID = :taskId")
+    Maybe<StockEntity> getStockById(int taskId);
 
     /**
      * Insert stock in database
@@ -37,7 +39,7 @@ public interface StockDao {
      * @param stock to be inserted in database
      */
     @Insert(onConflict = REPLACE)
-    void inserStock(Stock stock);
+    void inserStock(StockEntity... stock);
 
     /**
      * Delete particular stock from table
@@ -63,7 +65,7 @@ public interface StockDao {
      * @param stock to be replaced with old stock item
      */
     @Update(onConflict = REPLACE)
-    void updateStockItem(Stock stock);
+    void updateStockItem(StockEntity stock);
 }
 
 

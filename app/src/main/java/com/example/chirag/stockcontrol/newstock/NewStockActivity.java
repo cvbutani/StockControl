@@ -14,6 +14,7 @@ import android.net.Uri;
 
 import android.os.Bundle;
 
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 
 import android.support.annotation.Nullable;
@@ -22,7 +23,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import android.text.TextUtils;
 
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -39,19 +39,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.chirag.stockcontrol.R;
-import com.example.chirag.stockcontrol.data.ImageCapture;
-import com.example.chirag.stockcontrol.data.StockEntry;
-import com.example.chirag.stockcontrol.data.model.Stock;
+import com.example.chirag.stockcontrol.base.BaseActivity;
+import com.example.chirag.stockcontrol.data.constant.AppConfig;
+import com.example.chirag.stockcontrol.data.manager.DataManager;
+import com.example.chirag.stockcontrol.util.ImageCapture;
+import com.example.chirag.stockcontrol.data.entities.StockEntity;
 
 import java.util.Calendar;
-import java.util.List;
+
+import io.reactivex.disposables.Disposable;
 
 /**
  * StockControl
  * Created by Chirag on 06/07/18.
  */
 
-public class NewStockActivity extends AppCompatActivity implements NewStockContract.View {
+public class NewStockActivity extends BaseActivity implements NewStockContract.View {
 
     private DatePickerDialog.OnDateSetListener mDateSetListener;
 
@@ -76,7 +79,7 @@ public class NewStockActivity extends AppCompatActivity implements NewStockContr
     private Button mDeleteButton;
     private Button mPlaceOrder;
     private Button mSaveItem;
-    private Stock stock;
+    private StockEntity stock;
     private int position;
 
     public static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -106,19 +109,19 @@ public class NewStockActivity extends AppCompatActivity implements NewStockContr
         }
 
         // Attach presenter with Activity
-        mStockPresenter = new NewStockPresenter(this);
+        mStockPresenter = new NewStockPresenter(DataManager.getInstance());
         mStockPresenter.attachView(this);
-        // if position clicked was 0 then it will set title as Edit Stock otherwise
+        // if position clicked was 0 then it will set title as Edit StockEntity otherwise
         if (position != 0) {
             mDeleteButton.setVisibility(View.VISIBLE);
             mPlaceOrderLayout.setVisibility(View.VISIBLE);
-            setTitle("Edit Stock");
+            setTitle("Edit StockEntity");
             mStockPresenter.getStockData(position);
-            // It will set title as Add New Stock Item
+            // It will set title as Add New StockEntity Item
         } else {
             mPlaceOrderLayout.setVisibility(View.GONE);
             mDeleteButton.setVisibility(View.GONE);
-            setTitle("Add New Stock Item");
+            setTitle("Add New StockEntity Item");
         }
 
         // camera to take picture of stock item
@@ -258,30 +261,30 @@ public class NewStockActivity extends AppCompatActivity implements NewStockContr
                 String selection = (String) parent.getItemAtPosition(position);
                 if (!TextUtils.isEmpty(selection)) {
                     if (selection.equals(getString(R.string.category_adult_clothing))) {
-                        mCategory = StockEntry.CATEGORY_ADULT_FASHION;
+                        mCategory = AppConfig.CATEGORY_ADULT_FASHION;
                     } else if (selection.equals(getString(R.string.category_baby_clothing))) {
-                        mCategory = StockEntry.CATEGORY_BABY_CLOTHING;
+                        mCategory = AppConfig.CATEGORY_BABY_CLOTHING;
                     } else if (selection.equals(getString(R.string.category_beauty))) {
-                        mCategory = StockEntry.CATEGORY_BEAUTY_COSMETICS;
+                        mCategory = AppConfig.CATEGORY_BEAUTY_COSMETICS;
                     } else if (selection.equals(getString(R.string.category_books))) {
-                        mCategory = StockEntry.CATEGORY_BOOKS;
+                        mCategory = AppConfig.CATEGORY_BOOKS;
                     } else if (selection.equals(getString(R.string.category_electronics))) {
-                        mCategory = StockEntry.CATEGORY_ELECTRONICS;
+                        mCategory = AppConfig.CATEGORY_ELECTRONICS;
                     } else if (selection.equals(getString(R.string.category_food))) {
-                        mCategory = StockEntry.CATEGORY_FOOD;
+                        mCategory = AppConfig.CATEGORY_FOOD;
                     } else if (selection.equals(getString(R.string.category_health))) {
-                        mCategory = StockEntry.CATEGORY_HEALTH;
+                        mCategory = AppConfig.CATEGORY_HEALTH;
                     } else if (selection.equals(getString(R.string.category_housewares))) {
-                        mCategory = StockEntry.CATEGORY_HOUSEWARE;
+                        mCategory = AppConfig.CATEGORY_HOUSEWARE;
                     } else if (selection.equals(getString(R.string.category_toys_game))) {
-                        mCategory = StockEntry.CATEGORY_GAMES;
+                        mCategory = AppConfig.CATEGORY_GAMES;
                     }
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                mCategory = StockEntry.CATEGORY_UNKNOWN;
+                mCategory = AppConfig.CATEGORY_UNKNOWN;
             }
         });
     }
@@ -415,7 +418,7 @@ public class NewStockActivity extends AppCompatActivity implements NewStockContr
      * @param stock item to be displayed on UI.
      */
     @Override
-    public void getStock(Stock stock) {
+    public void getStock(StockEntity stock) {
         int quantity = stock.getQuantity();
 
         mNameEditText.setText(stock.getName());
@@ -438,31 +441,31 @@ public class NewStockActivity extends AppCompatActivity implements NewStockContr
 
         int category = stock.getCategory();
         switch (category) {
-            case StockEntry.CATEGORY_ADULT_FASHION:
+            case AppConfig.CATEGORY_ADULT_FASHION:
                 mCategorySpinner.setSelection(1);
                 break;
-            case StockEntry.CATEGORY_BABY_CLOTHING:
+            case AppConfig.CATEGORY_BABY_CLOTHING:
                 mCategorySpinner.setSelection(2);
                 break;
-            case StockEntry.CATEGORY_BEAUTY_COSMETICS:
+            case AppConfig.CATEGORY_BEAUTY_COSMETICS:
                 mCategorySpinner.setSelection(3);
                 break;
-            case StockEntry.CATEGORY_BOOKS:
+            case AppConfig.CATEGORY_BOOKS:
                 mCategorySpinner.setSelection(4);
                 break;
-            case StockEntry.CATEGORY_ELECTRONICS:
+            case AppConfig.CATEGORY_ELECTRONICS:
                 mCategorySpinner.setSelection(5);
                 break;
-            case StockEntry.CATEGORY_FOOD:
+            case AppConfig.CATEGORY_FOOD:
                 mCategorySpinner.setSelection(6);
                 break;
-            case StockEntry.CATEGORY_HEALTH:
+            case AppConfig.CATEGORY_HEALTH:
                 mCategorySpinner.setSelection(7);
                 break;
-            case StockEntry.CATEGORY_HOUSEWARE:
+            case AppConfig.CATEGORY_HOUSEWARE:
                 mCategorySpinner.setSelection(8);
                 break;
-            case StockEntry.CATEGORY_GAMES:
+            case AppConfig.CATEGORY_GAMES:
                 mCategorySpinner.setSelection(9);
                 break;
         }
@@ -496,7 +499,7 @@ public class NewStockActivity extends AppCompatActivity implements NewStockContr
                 TextUtils.isEmpty(quantityString) && TextUtils.isEmpty(date) &&
                 TextUtils.isEmpty(location) && TextUtils.isEmpty(supplier) &&
                 TextUtils.isEmpty(supplierContactNumber) && TextUtils.isEmpty(supplierEmailId)) {
-            //  Since no fields were modified, we can return early without creating a new Stock.
+            //  Since no fields were modified, we can return early without creating a new StockEntity.
             //  No need to create ContentValues and no need to do any ContentProvider operations.
             return;
         }
@@ -512,7 +515,7 @@ public class NewStockActivity extends AppCompatActivity implements NewStockContr
         if (!TextUtils.isEmpty(quantityString)) {
             quantity = Integer.parseInt(quantityString);
         }
-        stock = new Stock(mByteImage, name, price, quantity, date, mCategory, location, supplier, supplierContactNumber, supplierEmailId);
+        stock = new StockEntity(mByteImage, name, price, quantity, date, mCategory, location, supplier, supplierContactNumber, supplierEmailId);
 
         if (position == 0) {
             mStockPresenter.insertStock(stock);
@@ -528,8 +531,13 @@ public class NewStockActivity extends AppCompatActivity implements NewStockContr
         }
     }
 
+    @Override
+    public void onDisposable(Disposable disposable) {
+        baseCompositeDisposable.add(disposable);
+    }
+
     /**
-     * Delete Stock item Toast depending on response
+     * Delete StockEntity item Toast depending on response
      *
      * @param response is 0 error if 1 success
      */

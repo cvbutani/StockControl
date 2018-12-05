@@ -17,14 +17,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.chirag.stockcontrol.data.StockEntry;
-import com.example.chirag.stockcontrol.data.model.Stock;
+import com.example.chirag.stockcontrol.data.constant.AppConfig;
+import com.example.chirag.stockcontrol.data.entities.StockEntity;
 
 import java.util.List;
 
 public class StockAdapter extends RecyclerView.Adapter<StockAdapter.ViewHolder> {
 
-    private List<Stock> mStock;
+    private List<StockEntity> mStock;
 
     private OnItemClickListener mOnClickListener;
 
@@ -38,7 +38,7 @@ public class StockAdapter extends RecyclerView.Adapter<StockAdapter.ViewHolder> 
         void onQuantityUpdate(int quantity, int stockId);
     }
 
-    public StockAdapter(List<Stock> stocks, OnItemClickListener listener, Context context) {
+    public StockAdapter(List<StockEntity> stocks, OnItemClickListener listener, Context context) {
         mStock = stocks;
         mOnClickListener = listener;
         mContext = context;
@@ -53,7 +53,7 @@ public class StockAdapter extends RecyclerView.Adapter<StockAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
-        Stock stock = mStock.get(i);
+        StockEntity stock = mStock.get(i);
 
         String name = stock.getName();
         String price = String.valueOf(stock.getPrice());
@@ -89,31 +89,31 @@ public class StockAdapter extends RecyclerView.Adapter<StockAdapter.ViewHolder> 
         viewHolder.tvQuantity.setText("IN STOCK: " + String.valueOf(updatedQuantity));
 
         switch (category) {
-            case StockEntry.CATEGORY_ADULT_FASHION:
+            case AppConfig.CATEGORY_ADULT_FASHION:
                 viewHolder.tvCategory.setText(R.string.category_adult_clothing);
                 break;
-            case StockEntry.CATEGORY_BABY_CLOTHING:
+            case AppConfig.CATEGORY_BABY_CLOTHING:
                 viewHolder.tvCategory.setText(R.string.category_baby_clothing);
                 break;
-            case StockEntry.CATEGORY_BEAUTY_COSMETICS:
+            case AppConfig.CATEGORY_BEAUTY_COSMETICS:
                 viewHolder.tvCategory.setText(R.string.category_beauty);
                 break;
-            case StockEntry.CATEGORY_BOOKS:
+            case AppConfig.CATEGORY_BOOKS:
                 viewHolder.tvCategory.setText(R.string.category_books);
                 break;
-            case StockEntry.CATEGORY_ELECTRONICS:
+            case AppConfig.CATEGORY_ELECTRONICS:
                 viewHolder.tvCategory.setText(R.string.category_electronics);
                 break;
-            case StockEntry.CATEGORY_FOOD:
+            case AppConfig.CATEGORY_FOOD:
                 viewHolder.tvCategory.setText(R.string.category_food);
                 break;
-            case StockEntry.CATEGORY_HEALTH:
+            case AppConfig.CATEGORY_HEALTH:
                 viewHolder.tvCategory.setText(R.string.category_health);
                 break;
-            case StockEntry.CATEGORY_HOUSEWARE:
+            case AppConfig.CATEGORY_HOUSEWARE:
                 viewHolder.tvCategory.setText(R.string.category_housewares);
                 break;
-            case StockEntry.CATEGORY_GAMES:
+            case AppConfig.CATEGORY_GAMES:
                 viewHolder.tvCategory.setText(R.string.category_toys_game);
                 break;
             default:

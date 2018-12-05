@@ -1,4 +1,4 @@
-package com.example.chirag.stockcontrol.data;
+package com.example.chirag.stockcontrol.util;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

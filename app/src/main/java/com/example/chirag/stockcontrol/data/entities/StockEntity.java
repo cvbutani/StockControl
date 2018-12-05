@@ -1,16 +1,13 @@
-package com.example.chirag.stockcontrol.data.model;
+package com.example.chirag.stockcontrol.data.entities;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import java.util.UUID;
-
 @Entity(tableName = "tasks")
-public class Stock {
+public class StockEntity {
 
     @PrimaryKey(autoGenerate = true)
     @NonNull
@@ -57,7 +54,7 @@ public class Stock {
     @ColumnInfo(name = "suppleir_email_id")
     private  String supplierEmailId;
 
-    public Stock(byte[] image, @NonNull String name, @NonNull Double price, Integer quantity, String date, @NonNull Integer category, String location, String supplierName, String supplierContactNumber, String supplierEmailId) {
+    public StockEntity(byte[] image, @NonNull String name, @NonNull Double price, Integer quantity, String date, @NonNull Integer category, String location, String supplierName, String supplierContactNumber, String supplierEmailId) {
         this.image = image;
         this.name = name;
         this.price = price;

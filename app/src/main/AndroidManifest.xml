@@ -25,6 +25,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".home.StockActivity" />
         </activity>
+        <activity android:name=".base.BaseActivity" />
 
     </application>
 </manifest>

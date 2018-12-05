@@ -1,16 +1,19 @@
 package com.example.chirag.stockcontrol.newstock;
 
-import com.example.chirag.stockcontrol.data.model.Stock;
+import com.example.chirag.stockcontrol.base.MvpView;
+import com.example.chirag.stockcontrol.data.entities.StockEntity;
 
-import java.util.List;
+import io.reactivex.disposables.Disposable;
 
 public interface NewStockContract {
 
-    interface View {
+    interface View extends MvpView {
 
-        void getStock(Stock stock);
+        void getStock(StockEntity stock);
 
         void insertStocks();
+
+        void onDisposable(Disposable disposable);
 
     }
 
@@ -18,11 +21,11 @@ public interface NewStockContract {
 
         void getStockData(int stockId);
 
-        void insertStock(Stock item);
+        void insertStock(StockEntity item);
 
         int deleteStockData(int stockId);
 
-        void updateStock(Stock stock);
+        void updateStock(StockEntity stock);
 
         void attachView(NewStockContract.View view);
     }

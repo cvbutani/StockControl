@@ -10,7 +10,7 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!--Stock Image-->
+        <!--StockEntity Image-->
         <RelativeLayout
             android:id="@+id/camera"
             android:layout_width="wrap_content"

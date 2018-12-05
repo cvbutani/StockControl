@@ -23,10 +23,14 @@ import android.view.View;
 
 import com.example.chirag.stockcontrol.R;
 import com.example.chirag.stockcontrol.StockAdapter;
-import com.example.chirag.stockcontrol.data.model.Stock;
+import com.example.chirag.stockcontrol.base.BaseActivity;
+import com.example.chirag.stockcontrol.data.entities.StockEntity;
+import com.example.chirag.stockcontrol.data.manager.DataManager;
 import com.example.chirag.stockcontrol.newstock.NewStockActivity;
 
-public class StockActivity extends AppCompatActivity implements StockContract.View, StockAdapter.OnItemClickListener {
+import io.reactivex.disposables.Disposable;
+
+public class StockActivity extends BaseActivity implements StockContract.View, StockAdapter.OnItemClickListener {
 
     StockPresenter mStockPresenter;
 
@@ -54,7 +58,7 @@ public class StockActivity extends AppCompatActivity implements StockContract.Vi
     @Override
     protected void onStart() {
         super.onStart();
-        mStockPresenter = new StockPresenter(this);
+        mStockPresenter = new StockPresenter(DataManager.getInstance());
         mStockPresenter.attachView(this);
     }
 
@@ -96,28 +100,19 @@ public class StockActivity extends AppCompatActivity implements StockContract.Vi
         alertDialog.show();
     }
 
-//    private void deleteAllStockItems() {
-//
-//        int rowsDeleted = getContentResolver().delete(StockEntry.CONTENT_URI, null, null);
-//
-//        //  Show a toast message depending on whether or not the delete was successful.
-//        if (rowsDeleted == 0) {
-//            //  If no rows were deleted, then there was an error with the delete.
-//            Toast.makeText(this, getString(R.string.delete_stock_failure),
-//                    Toast.LENGTH_SHORT).show();
-//        } else {
-//            //  The delete was successful and we can display a toast.
-//            Toast.makeText(this, getString(R.string.delete_stock_success),
-//                    Toast.LENGTH_SHORT).show();
-//        }
-//    }
+    @Override
+    public void onDisposable(Disposable disposable) {
+        baseCompositeDisposable.add(disposable);
+    }
 
     @Override
-    public void getAllStockItems(List<Stock> stockItem) {
-        RecyclerView rvStocks = findViewById(R.id.my_recycler_view);
-        StockAdapter adapter = new StockAdapter(stockItem, this, this);
-        rvStocks.setLayoutManager(new LinearLayoutManager(this));
-        rvStocks.setAdapter(adapter);
+    public void getAllStockItems(List<StockEntity> stockItem) {
+        if (stockItem != null) {
+            RecyclerView rvStocks = findViewById(R.id.my_recycler_view);
+            StockAdapter adapter = new StockAdapter(stockItem, this, this);
+            rvStocks.setLayoutManager(new LinearLayoutManager(this));
+            rvStocks.setAdapter(adapter);
+        }
     }
 
     @Override

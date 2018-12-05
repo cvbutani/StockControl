@@ -5,12 +5,12 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
-import com.example.chirag.stockcontrol.data.model.Stock;
+import com.example.chirag.stockcontrol.data.entities.StockEntity;
 
 /**
  * Create table using room database persistence and returns single instance
  */
-@Database(entities = {Stock.class}, version = 1, exportSchema = false)
+@Database(entities = {StockEntity.class}, version = 1, exportSchema = false)
 public abstract class StockDatabase extends RoomDatabase {
 
     private static StockDatabase INSTANCE;

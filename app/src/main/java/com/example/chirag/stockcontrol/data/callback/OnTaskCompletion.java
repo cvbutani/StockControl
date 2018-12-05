@@ -1,18 +1,18 @@
-package com.example.chirag.stockcontrol.data;
+package com.example.chirag.stockcontrol.data.callback;
 
-import com.example.chirag.stockcontrol.data.model.Stock;
+import com.example.chirag.stockcontrol.data.entities.StockEntity;
 
 import java.util.List;
 
 public interface OnTaskCompletion {
 
     interface OnGetStockItems {
-        void stockItemsSuccess (List<Stock> stock);
+        void stockItemsSuccess (List<StockEntity> stock);
         void stockItemsFailure (String errorMessage);
     }
 
     interface OnGetStock {
-        void getStockSuccess (Stock stock);
+        void getStockSuccess (StockEntity stock);
         void getStockFailure (String errorMessage);
     }
 
@@ -21,6 +21,6 @@ public interface OnTaskCompletion {
     }
 
     interface OnUpdateStockItem {
-        void onUpdateStockSuccess(Stock stock);
+        void onUpdateStockSuccess(StockEntity stock);
     }
 }

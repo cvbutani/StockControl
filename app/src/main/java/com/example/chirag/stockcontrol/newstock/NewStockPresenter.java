@@ -2,65 +2,81 @@ package com.example.chirag.stockcontrol.newstock;
 
 import android.content.Context;
 
-import com.example.chirag.stockcontrol.data.OnTaskCompletion;
-import com.example.chirag.stockcontrol.data.local.StockDatabase;
-import com.example.chirag.stockcontrol.data.local.StockService;
-import com.example.chirag.stockcontrol.data.model.Stock;
-import com.example.chirag.stockcontrol.util.AppExecutors;
+import com.example.chirag.stockcontrol.base.BasePresenter;
+import com.example.chirag.stockcontrol.data.callback.OnTaskCompletion;
+import com.example.chirag.stockcontrol.data.entities.StockEntity;
+import com.example.chirag.stockcontrol.data.manager.DataManager;
 
-import java.util.List;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
-public class NewStockPresenter implements NewStockContract.Presenter {
+public class NewStockPresenter
+        extends BasePresenter<NewStockContract.View>
+        implements NewStockContract.Presenter {
 
-    private NewStockContract.View mCallback;
-
-    private StockService mStockService;
+    private DataManager mDataManager;
 
     private int value;
 
-    NewStockPresenter(Context context) {
-        mStockService = StockService.getInstance(new AppExecutors(), StockDatabase.getInstance(context).stockDao());
+    NewStockPresenter(DataManager manager) {
+        mDataManager = manager;
     }
 
     @Override
     public void getStockData(final int stockId) {
-        mStockService.getStockItem(stockId, new OnTaskCompletion.OnGetStock() {
-            @Override
-            public void getStockSuccess(Stock stock) {
-                mCallback.getStock(stock);
-            }
-
-            @Override
-            public void getStockFailure(String errorMessage) {
-
-            }
-        });
+        Disposable disposable =
+                mDataManager.getStockItem(stockId)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<StockEntity>() {
+                            @Override
+                            public void accept(StockEntity stockEntity) throws Exception {
+                                getView().getStock(stockEntity);
+                            }
+                        });
+        getView().onDisposable(disposable);
     }
 
     @Override
-    public void insertStock(Stock item) {
-        mStockService.insertStockItem(item);
+    public void insertStock(StockEntity item) {
+        Disposable disposable =
+                mDataManager.insertStockItem(item)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<Boolean>() {
+                            @Override
+                            public void accept(Boolean aBoolean) throws Exception {
+                                getView().insertStocks();
+                            }
+                        });
+        getView().onDisposable(disposable);
     }
 
     @Override
     public int deleteStockData(int stockId) {
-
-       mStockService.deleteStockItemData(stockId, new OnTaskCompletion.OnDeleteStockItem() {
-           @Override
-           public void onDeleteStockSuccess(int response) {
-               value = response;
-           }
-       });
-       return value;
+        mDataManager.deleteStockItemData(stockId, new OnTaskCompletion.OnDeleteStockItem() {
+            @Override
+            public void onDeleteStockSuccess(int response) {
+                value = response;
+            }
+        });
+        return value;
     }
 
     @Override
-    public void updateStock(Stock stock) {
-        mStockService.updateStockItems(stock);
+    public void updateStock(StockEntity stock) {
+        mDataManager.updateStockItems(stock);
+    }
+
+    @Override
+    public NewStockContract.View getView() {
+        return super.getView();
     }
 
     @Override
     public void attachView(NewStockContract.View view) {
-        mCallback = view;
+        super.attachView(view);
     }
 }
