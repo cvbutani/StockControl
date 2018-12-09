@@ -44,13 +44,7 @@ public class NewStockPresenter
         Disposable disposable =
                 mDataManager.insertStockItem(item)
                         .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Consumer<Boolean>() {
-                            @Override
-                            public void accept(Boolean aBoolean) throws Exception {
-                                getView().insertStocks();
-                            }
-                        });
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe();
         getView().onDisposable(disposable);
     }
 

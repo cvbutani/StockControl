@@ -8,7 +8,9 @@ import android.arch.persistence.room.Update;
 import com.example.chirag.stockcontrol.data.entities.StockEntity;
 
 import java.util.List;
+import java.util.Observable;
 
+import io.reactivex.Completable;
 import io.reactivex.Maybe;
 
 import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
@@ -39,7 +41,7 @@ public interface StockDao {
      * @param stock to be inserted in database
      */
     @Insert(onConflict = REPLACE)
-    void inserStock(StockEntity... stock);
+    void inserStock(final StockEntity stock);
 
     /**
      * Delete particular stock from table

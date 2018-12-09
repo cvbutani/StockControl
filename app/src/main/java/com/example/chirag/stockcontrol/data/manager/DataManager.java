@@ -8,6 +8,7 @@ import com.example.chirag.stockcontrol.util.AppExecutors;
 
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
@@ -21,7 +22,8 @@ public class DataManager implements DataContract {
         mStockRepository = StockRepository.getInstance(new AppExecutors(), mStockDatabase);
     }
 
-    public static DataManager getInstance() {
+    public static DataManager getInstance(StockDatabase database) {
+        mStockDatabase =database;
         return SingletonHelper.INSTANCE;
     }
 
@@ -36,7 +38,7 @@ public class DataManager implements DataContract {
     }
 
     @Override
-    public Observable<Boolean> insertStockItem(StockEntity stock) {
+    public Completable insertStockItem(StockEntity stock) {
         return mStockRepository.insertStockItem(stock);
     }
 

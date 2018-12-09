@@ -25,6 +25,7 @@ import com.example.chirag.stockcontrol.R;
 import com.example.chirag.stockcontrol.StockAdapter;
 import com.example.chirag.stockcontrol.base.BaseActivity;
 import com.example.chirag.stockcontrol.data.entities.StockEntity;
+import com.example.chirag.stockcontrol.data.local.StockDatabase;
 import com.example.chirag.stockcontrol.data.manager.DataManager;
 import com.example.chirag.stockcontrol.newstock.NewStockActivity;
 
@@ -58,7 +59,7 @@ public class StockActivity extends BaseActivity implements StockContract.View, S
     @Override
     protected void onStart() {
         super.onStart();
-        mStockPresenter = new StockPresenter(DataManager.getInstance());
+        mStockPresenter = new StockPresenter(DataManager.getInstance(StockDatabase.getInstance(this)));
         mStockPresenter.attachView(this);
     }
 

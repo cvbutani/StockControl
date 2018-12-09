@@ -11,6 +11,7 @@ import com.example.chirag.stockcontrol.util.AppExecutors;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
@@ -48,7 +49,6 @@ public class StockRepository implements StockRepoCallback {
 
     /**
      * Method will get all stock items from database
-     *
      */
     @Override
     public Maybe<List<StockEntity>> getAllStockItems() {
@@ -58,7 +58,7 @@ public class StockRepository implements StockRepoCallback {
     /**
      * Method will be executed when user requests for particular stock item from database
      *
-     * @param stockId  item id to pull data from database
+     * @param stockId item id to pull data from database
      */
     @Override
     public Maybe<StockEntity> getStockItem(final int stockId) {
@@ -71,14 +71,13 @@ public class StockRepository implements StockRepoCallback {
      * @param item stock item detail to be entered in database
      */
     @Override
-    public Observable<Boolean> insertStockItem(final StockEntity item) {
-        return Observable.fromCallable(new ObservableFromCallable<>(new Callable<Boolean>() {
+    public Completable insertStockItem(final StockEntity item) {
+        return Completable.fromRunnable(new Runnable() {
             @Override
-            public Boolean call() throws Exception {
+            public void run() {
                 mStockDatabase.stockDao().inserStock(item);
-                return true;
             }
-        }));
+        });
     }
 
     /**

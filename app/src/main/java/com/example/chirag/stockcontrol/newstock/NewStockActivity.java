@@ -41,6 +41,7 @@ import android.widget.Toast;
 import com.example.chirag.stockcontrol.R;
 import com.example.chirag.stockcontrol.base.BaseActivity;
 import com.example.chirag.stockcontrol.data.constant.AppConfig;
+import com.example.chirag.stockcontrol.data.local.StockDatabase;
 import com.example.chirag.stockcontrol.data.manager.DataManager;
 import com.example.chirag.stockcontrol.util.ImageCapture;
 import com.example.chirag.stockcontrol.data.entities.StockEntity;
@@ -109,7 +110,7 @@ public class NewStockActivity extends BaseActivity implements NewStockContract.V
         }
 
         // Attach presenter with Activity
-        mStockPresenter = new NewStockPresenter(DataManager.getInstance());
+        mStockPresenter = new NewStockPresenter(DataManager.getInstance(StockDatabase.getInstance(this)));
         mStockPresenter.attachView(this);
         // if position clicked was 0 then it will set title as Edit StockEntity otherwise
         if (position != 0) {
@@ -522,12 +523,15 @@ public class NewStockActivity extends BaseActivity implements NewStockContract.V
             //  Show a toast message depending on whether or not the insertion was successful.
             Toast.makeText(getApplicationContext(), getString(R.string.new_stock_added_success),
                     Toast.LENGTH_SHORT).show();
-        } else {
+            return;
+        }
+        if(position != 0) {
             stock.setId(position);
             mStockPresenter.updateStock(stock);
             // Update was successful and we can display a toast.
             Toast.makeText(getApplicationContext(), getString(R.string.update_stock_success),
                         Toast.LENGTH_SHORT).show();
+            return;
         }
     }
 

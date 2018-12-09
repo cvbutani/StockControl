@@ -5,6 +5,7 @@ import com.example.chirag.stockcontrol.data.entities.StockEntity;
 
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
@@ -15,7 +16,7 @@ public interface StockRepoCallback {
 
     Maybe<StockEntity> getStockItem(int stockId);
 
-    Observable<Boolean> insertStockItem(StockEntity stock);
+    Completable insertStockItem(StockEntity stock);
 
     void deleteStockItemData(int stockId, OnTaskCompletion.OnDeleteStockItem callback);
 
