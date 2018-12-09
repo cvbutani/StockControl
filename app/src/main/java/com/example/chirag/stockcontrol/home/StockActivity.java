@@ -41,12 +41,9 @@ public class StockActivity extends BaseActivity implements StockContract.View, S
         setContentView(R.layout.activity_main);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(StockActivity.this, NewStockActivity.class);
-                startActivity(intent);
-            }
+        fab.setOnClickListener(view -> {
+            Intent intent = new Intent(StockActivity.this, NewStockActivity.class);
+            startActivity(intent);
         });
     }
 

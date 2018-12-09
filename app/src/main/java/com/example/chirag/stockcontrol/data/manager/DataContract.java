@@ -1,6 +1,5 @@
 package com.example.chirag.stockcontrol.data.manager;
 
-import com.example.chirag.stockcontrol.data.callback.OnTaskCompletion;
 import com.example.chirag.stockcontrol.data.entities.StockEntity;
 
 import java.util.List;
@@ -15,9 +14,9 @@ public interface DataContract {
 
     Completable insertStockItem(StockEntity stock);
 
-    void deleteStockItemData(int stockId, OnTaskCompletion.OnDeleteStockItem callback);
+    Completable deleteStockItemData(int stockId);
 
-    void updateStockItem(int updatedQuantity, int stockId);
+    Completable updateStockItem(int updatedQuantity, int stockId);
 
-    void updateStockItems(StockEntity stock);
+    Completable updateStockItems(StockEntity stock);
 }

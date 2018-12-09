@@ -2,45 +2,34 @@ package com.example.chirag.stockcontrol.data.local.repository;
 
 import android.support.annotation.NonNull;
 
-import com.example.chirag.stockcontrol.data.callback.OnTaskCompletion;
 import com.example.chirag.stockcontrol.data.entities.StockEntity;
-import com.example.chirag.stockcontrol.data.local.StockDao;
 import com.example.chirag.stockcontrol.data.local.StockDatabase;
-import com.example.chirag.stockcontrol.util.AppExecutors;
 
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import io.reactivex.Completable;
-import io.reactivex.Flowable;
 import io.reactivex.Maybe;
-import io.reactivex.Observable;
-import io.reactivex.internal.operators.observable.ObservableFromCallable;
 
 public class StockRepository implements StockRepoCallback {
     private static StockRepository INSTANCE;
 
     private StockDatabase mStockDatabase;
 
-    private AppExecutors mAppExecutors;
-
-    private StockRepository(@NonNull AppExecutors appExecutors, @NonNull StockDatabase database) {
-        mAppExecutors = appExecutors;
+    private StockRepository (@NonNull StockDatabase database) {
         mStockDatabase = database;
     }
 
     /**
      * Method will be called to create one single instance of stockService class
      *
-     * @param appExecutors to run tasks in background or main thread
      * @param database     database interface
      * @return instance of StockRepository class
      */
-    public static StockRepository getInstance(@NonNull AppExecutors appExecutors, @NonNull StockDatabase database) {
+    public static StockRepository getInstance(@NonNull StockDatabase database) {
         if (INSTANCE == null) {
             synchronized (StockRepository.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new StockRepository(appExecutors, database);
+                    INSTANCE = new StockRepository(database);
                 }
             }
         }
@@ -72,35 +61,18 @@ public class StockRepository implements StockRepoCallback {
      */
     @Override
     public Completable insertStockItem(final StockEntity item) {
-        return Completable.fromRunnable(new Runnable() {
-            @Override
-            public void run() {
-                mStockDatabase.stockDao().inserStock(item);
-            }
-        });
+        return Completable.fromRunnable(() -> mStockDatabase.stockDao().inserStock(item));
     }
 
     /**
      * Method will be executed when user wants to delete any stock items
      *
-     * @param stockId  stock id that user wants to delete
-     * @param callback it will pass integer if successfully deleted
+     * @param stockId stock id that user wants to delete
      */
     @Override
-    public void deleteStockItemData(final int stockId, final OnTaskCompletion.OnDeleteStockItem callback) {
-        Runnable deleteStockRunnable = new Runnable() {
-            @Override
-            public void run() {
-                final int deleted = mStockDatabase.stockDao().deleteTaskById(stockId);
-                mAppExecutors.getMainThread().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        callback.onDeleteStockSuccess(deleted);
-                    }
-                });
-            }
-        };
-        mAppExecutors.getDiskIO().execute(deleteStockRunnable);
+    public Completable deleteStockItemData(final int stockId) {
+        return Completable.fromRunnable(() -> mStockDatabase.stockDao().deleteTaskById(stockId));
+
     }
 
     /**
@@ -110,14 +82,8 @@ public class StockRepository implements StockRepoCallback {
      * @param stockId         stock id that user wants to update quantity
      */
     @Override
-    public void updateStockItem(final int updatedQuantity, final int stockId) {
-        Runnable updateStockRunnable = new Runnable() {
-            @Override
-            public void run() {
-                mStockDatabase.stockDao().updateStock(updatedQuantity, stockId);
-            }
-        };
-        mAppExecutors.getDiskIO().execute(updateStockRunnable);
+    public Completable updateStockItem(final int updatedQuantity, final int stockId) {
+        return Completable.fromRunnable(() -> mStockDatabase.stockDao().updateStock(updatedQuantity, stockId));
     }
 
     /**
@@ -126,13 +92,7 @@ public class StockRepository implements StockRepoCallback {
      * @param stock updated stock details
      */
     @Override
-    public void updateStockItems(final StockEntity stock) {
-        Runnable updatedStockRunnable = new Runnable() {
-            @Override
-            public void run() {
-                mStockDatabase.stockDao().updateStockItem(stock);
-            }
-        };
-        mAppExecutors.getDiskIO().execute(updatedStockRunnable);
+    public Completable updateStockItems(final StockEntity stock) {
+        return Completable.fromRunnable(() -> mStockDatabase.stockDao().updateStockItem(stock));
     }
 }
